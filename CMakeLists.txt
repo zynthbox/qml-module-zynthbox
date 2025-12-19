@@ -55,8 +55,11 @@ find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS
     Widgets)
 
 find_package(KF${KF_MAJOR_VERSION} ${REQUIRED_KF_VERSION} REQUIRED COMPONENTS
-    CoreAddons)
-
+    CoreAddons
+    Plasma
+    Config)
+ #   find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS Plasma)
+ # find_package(Plasma REQUIRED)
 if(QUICK_COMPILER)
     find_package(Qt5QuickCompiler)
     set_package_properties(Qt5QuickCompiler PROPERTIES

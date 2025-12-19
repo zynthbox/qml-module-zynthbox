@@ -5,6 +5,11 @@
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/libs)
 
+set(PLASMA_RELATIVE_DATA_INSTALL_DIR "plasma")
+set(PLASMA_DATA_INSTALL_DIR "${KDE_INSTALL_DATADIR}/${PLASMA_RELATIVE_DATA_INSTALL_DIR}")
+
+find_package(Qt5 REQUIRED COMPONENTS Core)
+
 ecm_add_qml_module(ZynthboxKit
     VERSION 1.0
     URI "io.zynthbox.ui2"
@@ -22,7 +27,8 @@ ecm_add_qml_module(ZynthboxKit
 target_sources(ZynthboxKit
     PRIVATE
     zynthbox.cpp
-    zynthbox.h)
+    zynthbox.h
+    theme.h theme.cpp)
 
 if(QUICK_COMPILER)
     qtquick_compiler_add_resources(zb_QML_QRC zynthbox.qrc)
@@ -49,12 +55,14 @@ target_link_libraries(ZynthboxKit
     PUBLIC
     Qt${QT_MAJOR_VERSION}::Core
     KF${KF_MAJOR_VERSION}::CoreAddons
-
+    KF${KF_MAJOR_VERSION}::ConfigCore
     PRIVATE
+     KF5::Plasma
     Qt${QT_MAJOR_VERSION}::Qml
     Qt${QT_MAJOR_VERSION}::Svg
     Qt${QT_MAJOR_VERSION}::Widgets
     Qt${QT_MAJOR_VERSION}::QuickControls2)
+
 
 ecm_finalize_qml_module(ZynthboxKit
     DESTINATION ${KDE_INSTALL_QMLDIR})
