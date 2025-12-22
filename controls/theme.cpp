@@ -6,7 +6,6 @@
 #include <QStringBuilder>
 #include <Plasma/Theme>
 
-
 using QSP = QStandardPaths;
 #define PLASMA_RELATIVE_DATA_INSTALL_DIR "plasma"
 
@@ -34,14 +33,14 @@ void Theme::sync()
 
 Theme::Theme(QObject *parent)
     : QObject{parent}
+    , p_theme(new Plasma::Theme(this))
 {
-
-    auto theme = new Plasma::Theme(this);
-    connect(theme, &Plasma::Theme::themeChanged, this, [this, theme](){
-        setThemeName(theme->themeName());
+    connect(p_theme, &Plasma::Theme::themeChanged, this, [this](){
+        setThemeName(p_theme->themeName());
     });
 
-    m_themeName = theme->themeName();
+    m_themeName = p_theme->themeName();
+    sync();
 }
 
 int Theme::spacing() const
@@ -73,7 +72,6 @@ void Theme::setThemeName(const QString &newThemeName)
     Q_EMIT themeChanged();
 }
 
-
 void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
 {
     KConfigGroup cg;
@@ -88,4 +86,29 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_padding = 1;
         m_radius = 4;
     }
+}
+
+bool Theme::backgroundContrastEnabled() const
+{
+    return p_theme->backgroundContrastEnabled();
+}
+
+qreal Theme::backgroundContrast() const
+{
+    return p_theme->backgroundContrast();
+}
+
+qreal Theme::backgroundIntensity() const
+{
+    return p_theme->backgroundIntensity();
+}
+
+qreal Theme::backgroundSaturation() const
+{
+    return p_theme->backgroundSaturation();
+}
+
+QString Theme::wallpaperPath() const
+{
+    return p_theme->wallpaperPath();
 }
