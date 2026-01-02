@@ -1,0 +1,12 @@
+*~
+.*~
+__pycache__
+*.qmlc
+*.jsc
+*.pyproject.user
+*.pyproject.user*
+.idea
+*.autosave
+.qtcreator
+build/
+.clang-format
