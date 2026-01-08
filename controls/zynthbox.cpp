@@ -46,6 +46,7 @@ void ZynthboxKit::registerTypes(const char *uri)
     Q_ASSERT(QLatin1String(uri) == QLatin1String("io.zynthbox.ui2"));
     
     qmlRegisterType(componentUrl(QStringLiteral("Button.qml")), uri, 1, 0, "Button");
+    qmlRegisterType(componentUrl(QStringLiteral("Popup.qml")), uri, 1, 0, "Popup");
     qmlRegisterUncreatableType<Theme>(uri, 1, 0, "Theme", QStringLiteral("Cannot create objects of type Theme, use it as an attached property"));
 
     // qmlProtectModule(uri, 3);

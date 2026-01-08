@@ -10,7 +10,7 @@ set(PLASMA_DATA_INSTALL_DIR "${KDE_INSTALL_DATADIR}/${PLASMA_RELATIVE_DATA_INSTA
 
 find_package(Qt5 REQUIRED COMPONENTS Core)
 
-ecm_add_qml_module(ZynthboxKit
+ecm_add_qml_module(ZynthboxQmlModule
     VERSION 1.0
     URI "io.zynthbox.ui2"
     CLASS_NAME ZynthboxKit
@@ -24,7 +24,7 @@ ecm_add_qml_module(ZynthboxKit
 #     PRIVATE
 #     libs/appview.h
 #     libs/tabview.h)
-target_sources(ZynthboxKit
+target_sources(ZynthboxQmlModule
     PRIVATE
     zynthbox.cpp
     zynthbox.h
@@ -36,22 +36,23 @@ else()
     qt5_add_resources(zb_QML_QRC zynthbox.qrc)
 endif()
 
-ecm_target_qml_sources(ZynthboxKit SOURCES
+ecm_target_qml_sources(ZynthboxQmlModule SOURCES
 
-    qml/Button.qml)
+    qml/Button.qml
+    qml/Popup.qml)
 
 # ecm_target_qml_sources(ZynthboxKit PATH private SOURCES
 
 #     qml/private/AboutDialog.qml)
 
 if(QUICK_COMPILER)
-    target_sources(ZynthboxKit PRIVATE ${zb_QML_QRC})
+    target_sources(ZynthboxQmlModule PRIVATE ${zb_QML_QRC})
 
     add_definitions(-DQUICK_COMPILER)
-    target_compile_definitions(ZynthboxKit PUBLIC QUICK_COMPILER)
+    target_compile_definitions(ZynthboxQmlModule PUBLIC QUICK_COMPILER)
 endif()
 
-target_link_libraries(ZynthboxKit
+target_link_libraries(ZynthboxQmlModule
     PUBLIC
     Qt${QT_MAJOR_VERSION}::Core
     KF${KF_MAJOR_VERSION}::CoreAddons
@@ -64,7 +65,7 @@ target_link_libraries(ZynthboxKit
     Qt${QT_MAJOR_VERSION}::QuickControls2)
 
 
-ecm_finalize_qml_module(ZynthboxKit
+ecm_finalize_qml_module(ZynthboxQmlModule
     DESTINATION ${KDE_INSTALL_QMLDIR})
 
 ecm_generate_qmltypes(${ZB_URI} 1.3 DESTINATION ${KDE_INSTALL_QMLDIR}/io/zynthbox/ui2)

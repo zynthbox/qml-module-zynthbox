@@ -37,7 +37,7 @@ private:
     QString resolveFileUrl(const QString &filePath) const
     {       
         #ifdef QUICK_COMPILER
-        return QStringLiteral("qrc:/") + filePath;
+        return QStringLiteral("qrc:/qml/") + filePath;
         #else
         return baseUrl().toString() + QLatin1Char('/') + filePath;
         #endif
