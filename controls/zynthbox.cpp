@@ -26,7 +26,7 @@
 
 
 ZynthboxKit::ZynthboxKit(QObject *parent) : QQmlExtensionPlugin(parent)
-{   
+{
 }
 
 QUrl ZynthboxKit::componentUrl(const QString &fileName) const
@@ -40,13 +40,23 @@ void ZynthboxKit::initializeEngine(QQmlEngine* engine, const char* uri)
 }
 
 void ZynthboxKit::registerTypes(const char *uri)
-{    
+{
     qDebug() << "REGISTER ZYNTHBOX KIT TYPES <<<<<<<<<<<<<<<<<<<<<<";
 
     Q_ASSERT(QLatin1String(uri) == QLatin1String("io.zynthbox.ui2"));
-    
+
+    qmlRegisterType(componentUrl(QStringLiteral("ActionPickerPopup.qml")), uri, 1, 0, "ActionPickerPopup");
     qmlRegisterType(componentUrl(QStringLiteral("Button.qml")), uri, 1, 0, "Button");
+    qmlRegisterType(componentUrl(QStringLiteral("ComboBox.qml")), uri, 1, 0, "ComboBox");
+    qmlRegisterType(componentUrl(QStringLiteral("Dialog.qml")), uri, 1, 0, "Dialog");
+    qmlRegisterType(componentUrl(QStringLiteral("Drawer.qml")), uri, 1, 0, "Drawer");
+    qmlRegisterType(componentUrl(QStringLiteral("DialogQuestion.qml")), uri, 1, 0, "DialogQuestion");
     qmlRegisterType(componentUrl(QStringLiteral("Popup.qml")), uri, 1, 0, "Popup");
+    qmlRegisterType(componentUrl(QStringLiteral("PlayGridButton.qml")), uri, 1, 0, "PlayGridButton");
+    qmlRegisterType(componentUrl(QStringLiteral("DialogQuestionButtonFocusHighlight.qml")), uri, 1, 0, "DialogQuestionButtonFocusHighlight");
+
+    qmlRegisterType(componentUrl(QStringLiteral("ScreenPage.qml")), uri, 1, 0, "ScreenPage");
+
     qmlRegisterUncreatableType<Theme>(uri, 1, 0, "Theme", QStringLiteral("Cannot create objects of type Theme, use it as an attached property"));
 
     // qmlProtectModule(uri, 3);

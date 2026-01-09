@@ -37,9 +37,17 @@ else()
 endif()
 
 ecm_target_qml_sources(ZynthboxQmlModule SOURCES
-
+    qml/ActionPickerPopup.qml
     qml/Button.qml
-    qml/Popup.qml)
+    qml/Dialog.qml
+    qml/Drawer.qml
+    qml/DialogQuestion.qml
+    qml/DialogQuestionButtonFocusHighlight.qml
+    qml/ComboBox.qml
+    qml/Popup.qml
+    qml/PlayGridButton.qml
+    qml/ScreenPage.qml
+    )
 
 # ecm_target_qml_sources(ZynthboxKit PATH private SOURCES
 

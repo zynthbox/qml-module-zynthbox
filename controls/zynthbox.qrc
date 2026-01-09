@@ -1,7 +1,15 @@
 <!DOCTYPE RCC>
 <RCC>
   <qresource prefix="/">
+    <file>qml/ActionPickerPopup.qml</file>
     <file>qml/Button.qml</file>
+    <file>qml/Dialog.qml</file>
+    <file>qml/Drawer.qml</file>
+    <file>qml/DialogQuestion.qml</file>
     <file>qml/Popup.qml</file>
-  </qresource>
+    <file>qml/PlayGridButton.qml</file>
+    <file>qml/DialogQuestionButtonFocusHighlight.qml</file>
+    <file>qml/ComboBox.qml</file>
+    <file>qml/ScreenPage.qml</file>
+    </qresource>
 </RCC>
