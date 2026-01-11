@@ -8,10 +8,10 @@ option(BUILD_WITH_QT5 "Use Qt 5" OFF)
 option(BUILD_WITH_QT6 "Use Qt 6" OFF)
 
 set(QT_MAJOR_VERSION 5)
-    set(KF_MAJOR_VERSION 5)
+set(KF_MAJOR_VERSION 5)
 
-    set(REQUIRED_QT_VERSION 5.15.2)
-    set(REQUIRED_KF_VERSION 5.95.0)
+set(REQUIRED_QT_VERSION 5.15.2)
+set(REQUIRED_KF_VERSION 5.95.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -69,7 +69,6 @@ endif()
 
 add_compile_definitions(QT_DISABLE_DEPRECATED_UP_TO=0x050F00)
 
-add_subdirectory(style)
 add_subdirectory(controls)
 
 ##Clang formatting
