@@ -46,16 +46,45 @@ void ZynthboxKit::registerTypes(const char *uri)
     Q_ASSERT(QLatin1String(uri) == QLatin1String("io.zynthbox.ui2"));
 
     qmlRegisterType(componentUrl(QStringLiteral("ActionPickerPopup.qml")), uri, 1, 0, "ActionPickerPopup");
+    qmlRegisterType(componentUrl(QStringLiteral("ActionBar.qml")), uri, 1, 0, "ActionBar");
+    qmlRegisterType(componentUrl(QStringLiteral("ActionRow.qml")), uri, 1, 0, "ActionRow");
+    qmlRegisterType(componentUrl(QStringLiteral("AbstractController.qml")), uri, 1, 0, "AbstractController");
+    qmlRegisterType(componentUrl(QStringLiteral("AbstractADSRView.qml")), uri, 1, 0, "AbstractADSRView");
+    qmlRegisterType(componentUrl(QStringLiteral("ADSRControlView.qml")), uri, 1, 0, "ADSRControlView");
+    qmlRegisterType(componentUrl(QStringLiteral("ADSRClipView.qml")), uri, 1, 0, "ADSRClipView");
+    qmlRegisterType(componentUrl(QStringLiteral("SwitchController.qml")), uri, 1, 0, "SwitchController");
+    qmlRegisterType(componentUrl(QStringLiteral("SliderController.qml")), uri, 1, 0, "SliderController");
+    qmlRegisterType(componentUrl(QStringLiteral("MultiSwitchController.qml")), uri, 1, 0, "MultiSwitchController");
+    qmlRegisterType(componentUrl(QStringLiteral("DialController.qml")), uri, 1, 0, "DialController");
+    qmlRegisterType(componentUrl(QStringLiteral("ControllerLoader.qml")), uri, 1, 0, "ControllerLoader");
+    qmlRegisterType(componentUrl(QStringLiteral("ControllerGroup.qml")), uri, 1, 0, "ControllerGroup");
+    qmlRegisterType(componentUrl(QStringLiteral("BasicDelegate.qml")), uri, 1, 0, "BasicDelegate");
     qmlRegisterType(componentUrl(QStringLiteral("Button.qml")), uri, 1, 0, "Button");
     qmlRegisterType(componentUrl(QStringLiteral("ComboBox.qml")), uri, 1, 0, "ComboBox");
+    qmlRegisterType(componentUrl(QStringLiteral("Card.qml")), uri, 1, 0, "Card");
     qmlRegisterType(componentUrl(QStringLiteral("Dialog.qml")), uri, 1, 0, "Dialog");
     qmlRegisterType(componentUrl(QStringLiteral("Drawer.qml")), uri, 1, 0, "Drawer");
     qmlRegisterType(componentUrl(QStringLiteral("DialogQuestion.qml")), uri, 1, 0, "DialogQuestion");
+    qmlRegisterType(componentUrl(QStringLiteral("InfinitySlider.qml")), uri, 1, 0, "InfinitySlider");
+    qmlRegisterType(componentUrl(QStringLiteral("LibraryPagePicker.qml")), uri, 1, 0, "LibraryPagePicker");
+    qmlRegisterType(componentUrl(QStringLiteral("MultiSelectorPage.qml")), uri, 1, 0, "MultiSelectorPage");
+    qmlRegisterType(componentUrl(QStringLiteral("KnobIndicator.qml")), uri, 1, 0, "KnobIndicator");
+    qmlRegisterType(componentUrl(QStringLiteral("NewStuffPage.qml")), uri, 1, 0, "NewStuffPage");
+    qmlRegisterType(componentUrl(QStringLiteral("NotePickerPopup.qml")), uri, 1, 0, "NotePickerPopup");
     qmlRegisterType(componentUrl(QStringLiteral("Popup.qml")), uri, 1, 0, "Popup");
     qmlRegisterType(componentUrl(QStringLiteral("PlayGridButton.qml")), uri, 1, 0, "PlayGridButton");
     qmlRegisterType(componentUrl(QStringLiteral("DialogQuestionButtonFocusHighlight.qml")), uri, 1, 0, "DialogQuestionButtonFocusHighlight");
 
+    qmlRegisterType(componentUrl(QStringLiteral("Stack.qml")), uri, 1, 0, "Stack");
     qmlRegisterType(componentUrl(QStringLiteral("ScreenPage.qml")), uri, 1, 0, "ScreenPage");
+    qmlRegisterType(componentUrl(QStringLiteral("SelectorPage.qml")), uri, 1, 0, "SelectorPage");
+    qmlRegisterType(componentUrl(QStringLiteral("SelectorDelegate.qml")), uri, 1, 0, "SelectorDelegate");
+    qmlRegisterType(componentUrl(QStringLiteral("SelectorView.qml")), uri, 1, 0, "SelectorView");
+
+    qmlRegisterType(componentUrl(QStringLiteral("private/ActionButton.qml")), uri, 1, 0, "ActionButton");
+    qmlRegisterType(componentUrl(QStringLiteral("private/SelectorViewBackground.qml")), uri, 1, 0, "SelectorViewBackground");
+    qmlRegisterType(componentUrl(QStringLiteral("private/DelegateBackground.qml")), uri, 1, 0, "DelegateBackground");
+    qmlRegisterType(componentUrl(QStringLiteral("private/CardBackground.qml")), uri, 1, 0, "CardBackground");
 
     qmlRegisterUncreatableType<Theme>(uri, 1, 0, "Theme", QStringLiteral("Cannot create objects of type Theme, use it as an attached property"));
 

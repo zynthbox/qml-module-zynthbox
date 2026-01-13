@@ -2,14 +2,43 @@
 <RCC>
   <qresource prefix="/">
     <file>qml/ActionPickerPopup.qml</file>
+    <file>qml/ActionRow.qml</file>
+    <file>qml/AbstractADSRView.qml</file>
+    <file>qml/ADSRClipView.qml</file>
+    <file>qml/ADSRControlView.qml</file>
+    <file>qml/ActionBar.qml</file>
+    <file>qml/AbstractController.qml</file>
+    <file>qml/DialController.qml</file>
+    <file>qml/SwitchController.qml</file>
+    <file>qml/SliderController.qml</file>
+    <file>qml/MultiSwitchController.qml</file>
+    <file>qml/ControllerLoader.qml</file>
+    <file>qml/ControllerGroup.qml</file>
+    <file>qml/KnobIndicator.qml</file>    
+    <file>qml/BasicDelegate.qml</file>
     <file>qml/Button.qml</file>
+    <file>qml/Card.qml</file>
+    <file>qml/ComboBox.qml</file>
     <file>qml/Dialog.qml</file>
+    <file>qml/DialogQuestionButtonFocusHighlight.qml</file>
     <file>qml/Drawer.qml</file>
     <file>qml/DialogQuestion.qml</file>
+    <file>qml/InfinitySlider.qml</file>
+    <file>qml/LibraryPagePicker.qml</file>
+    <file>qml/MultiSelectorPage.qml</file>
+    <file>qml/NotePickerPopup.qml</file>
+    <file>qml/NewStuffPage.qml</file>
     <file>qml/Popup.qml</file>
     <file>qml/PlayGridButton.qml</file>
-    <file>qml/DialogQuestionButtonFocusHighlight.qml</file>
-    <file>qml/ComboBox.qml</file>
+    <file>qml/Stack.qml</file>
     <file>qml/ScreenPage.qml</file>
+    <file>qml/SelectorView.qml</file>
+    <file>qml/SelectorPage.qml</file>
+    <file>qml/SelectorDelegate.qml</file>
+
+    <file>qml/private/ActionButton.qml</file>
+    <file>qml/private/SelectorViewBackground.qml</file>
+    <file>qml/private/DelegateBackground.qml</file>
+    <file>qml/private/CardBackground.qml</file>
     </qresource>
 </RCC>

@@ -19,11 +19,6 @@ ecm_add_qml_module(ZynthboxQmlModule
     "Qt5Compat.GraphicalEffects"
     NO_PLUGIN_OPTIONAL)
 
-# target_sources(MauiKit${MAUI_MAJOR_VERSION}
-
-#     PRIVATE
-#     libs/appview.h
-#     libs/tabview.h)
 target_sources(ZynthboxQmlModule
     PRIVATE
     zynthbox.cpp
@@ -38,20 +33,52 @@ endif()
 
 ecm_target_qml_sources(ZynthboxQmlModule SOURCES
     qml/ActionPickerPopup.qml
+    qml/ActionRow.qml
+    qml/AbstractADSRView.qml
+    qml/ADSRClipView.qml
+    qml/ADSRControlView.qml
+    
+    qml/ActionBar.qml
+    qml/Card.qml
+
+    qml/BasicDelegate.qml
     qml/Button.qml
     qml/Dialog.qml
     qml/Drawer.qml
     qml/DialogQuestion.qml
     qml/DialogQuestionButtonFocusHighlight.qml
     qml/ComboBox.qml
+    qml/InfinitySlider.qml
+    qml/LibraryPagePicker.qml
+    qml/KnobIndicator.qml
+    qml/MultiSelectorPage.qml
+    qml/NotePickerPopup.qml
+    qml/NewStuffPage.qml
     qml/Popup.qml
     qml/PlayGridButton.qml
+    qml/Stack.qml
     qml/ScreenPage.qml
+    qml/SelectorView.qml
+    qml/SelectorPage.qml
+    qml/SelectorDelegate.qml
+
+    #Controllers
+    qml/AbstractController.qml
+    qml/SwitchController.qml
+    qml/DialController.qml
+    qml/SliderController.qml
+    qml/MultiSwitchController.qml
+    qml/ControllerLoader.qml
+    qml/ControllerGroup.qml
     )
 
-# ecm_target_qml_sources(ZynthboxKit PATH private SOURCES
+ecm_target_qml_sources(ZynthboxQmlModule PATH private SOURCES
 
-#     qml/private/AboutDialog.qml)
+    qml/private/ActionButton.qml
+    qml/private/CardBackground.qml
+    qml/private/DelegateBackground.qml
+    qml/private/SelectorViewBackground.qml
+    )
 
 if(QUICK_COMPILER)
     target_sources(ZynthboxQmlModule PRIVATE ${zb_QML_QRC})
