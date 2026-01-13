@@ -40,5 +40,6 @@
     <file>qml/private/SelectorViewBackground.qml</file>
     <file>qml/private/DelegateBackground.qml</file>
     <file>qml/private/CardBackground.qml</file>
+    <file>qml/private/NewStuffPageContents.qml</file>
     </qresource>
 </RCC>
