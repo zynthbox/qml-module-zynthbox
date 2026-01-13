@@ -42,6 +42,7 @@ ecm_target_qml_sources(ZynthboxQmlModule SOURCES
     qml/Card.qml
 
     qml/BasicDelegate.qml
+    qml/BreadcrumbButton.qml
     qml/Button.qml
     qml/Dialog.qml
     qml/Drawer.qml
@@ -52,15 +53,27 @@ ecm_target_qml_sources(ZynthboxQmlModule SOURCES
     qml/LibraryPagePicker.qml
     qml/KnobIndicator.qml
     qml/MultiSelectorPage.qml
+    qml/Menu.qml
     qml/NotePickerPopup.qml
+    qml/NotePad.qml
     qml/NewStuffPage.qml
     qml/Popup.qml
     qml/PlayGridButton.qml
+    qml/Rating.qml
+    qml/ResetableSlider.qml
     qml/Stack.qml
+    qml/ScrollableScreenPage.qml
     qml/ScreenPage.qml
     qml/SelectorView.qml
     qml/SelectorPage.qml
     qml/SelectorDelegate.qml
+    qml/SelectorWrapper.qml
+    qml/SketchpadDial.qml
+    qml/SketchpadMultiSwitch.qml
+    qml/TabbedControlViewAction.qml
+    qml/TabbedControlView.qml
+    qml/TableHeader.qml
+    qml/TableHeaderLabel.qml
 
     #Controllers
     qml/AbstractController.qml
@@ -70,15 +83,14 @@ ecm_target_qml_sources(ZynthboxQmlModule SOURCES
     qml/MultiSwitchController.qml
     qml/ControllerLoader.qml
     qml/ControllerGroup.qml
-    )
+    qml/CommonUtils.js)
 
 ecm_target_qml_sources(ZynthboxQmlModule PATH private SOURCES
 
     qml/private/ActionButton.qml
     qml/private/CardBackground.qml
     qml/private/DelegateBackground.qml
-    qml/private/SelectorViewBackground.qml
-    )
+    qml/private/SelectorViewBackground.qml)
 
 if(QUICK_COMPILER)
     target_sources(ZynthboxQmlModule PRIVATE ${zb_QML_QRC})

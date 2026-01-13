@@ -8,6 +8,7 @@
     <file>qml/ADSRControlView.qml</file>
     <file>qml/ActionBar.qml</file>
     <file>qml/AbstractController.qml</file>
+    <file>qml/BreadcrumbButton.qml</file>
     <file>qml/DialController.qml</file>
     <file>qml/SwitchController.qml</file>
     <file>qml/SliderController.qml</file>
@@ -19,22 +20,35 @@
     <file>qml/Button.qml</file>
     <file>qml/Card.qml</file>
     <file>qml/ComboBox.qml</file>
+    <file>qml/CommonUtils.js</file>
     <file>qml/Dialog.qml</file>
     <file>qml/DialogQuestionButtonFocusHighlight.qml</file>
     <file>qml/Drawer.qml</file>
     <file>qml/DialogQuestion.qml</file>
     <file>qml/InfinitySlider.qml</file>
     <file>qml/LibraryPagePicker.qml</file>
+    <file>qml/Menu.qml</file>
     <file>qml/MultiSelectorPage.qml</file>
     <file>qml/NotePickerPopup.qml</file>
+    <file>qml/NotePad.qml</file>
     <file>qml/NewStuffPage.qml</file>
     <file>qml/Popup.qml</file>
     <file>qml/PlayGridButton.qml</file>
+    <file>qml/Rating.qml</file>
+    <file>qml/ResetableSlider.qml</file>
     <file>qml/Stack.qml</file>
+    <file>qml/ScrollableScreenPage.qml</file>
     <file>qml/ScreenPage.qml</file>
     <file>qml/SelectorView.qml</file>
     <file>qml/SelectorPage.qml</file>
     <file>qml/SelectorDelegate.qml</file>
+    <file>qml/SelectorWrapper.qml</file>
+    <file>qml/SketchpadDial.qml</file>
+    <file>qml/SketchpadMultiSwitch.qml</file>
+    <file>qml/TabbedControlViewAction.qml</file>
+    <file>qml/TabbedControlView.qml</file>
+    <file>qml/TableHeader.qml</file>
+    <file>qml/TableHeaderLabel.qml</file>
 
     <file>qml/private/ActionButton.qml</file>
     <file>qml/private/SelectorViewBackground.qml</file>

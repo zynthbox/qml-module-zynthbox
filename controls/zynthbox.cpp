@@ -59,6 +59,7 @@ void ZynthboxKit::registerTypes(const char *uri)
     qmlRegisterType(componentUrl(QStringLiteral("ControllerLoader.qml")), uri, 1, 0, "ControllerLoader");
     qmlRegisterType(componentUrl(QStringLiteral("ControllerGroup.qml")), uri, 1, 0, "ControllerGroup");
     qmlRegisterType(componentUrl(QStringLiteral("BasicDelegate.qml")), uri, 1, 0, "BasicDelegate");
+    qmlRegisterType(componentUrl(QStringLiteral("BreadcrumbButton.qml")), uri, 1, 0, "BreadcrumbButton");
     qmlRegisterType(componentUrl(QStringLiteral("Button.qml")), uri, 1, 0, "Button");
     qmlRegisterType(componentUrl(QStringLiteral("ComboBox.qml")), uri, 1, 0, "ComboBox");
     qmlRegisterType(componentUrl(QStringLiteral("Card.qml")), uri, 1, 0, "Card");
@@ -67,19 +68,31 @@ void ZynthboxKit::registerTypes(const char *uri)
     qmlRegisterType(componentUrl(QStringLiteral("DialogQuestion.qml")), uri, 1, 0, "DialogQuestion");
     qmlRegisterType(componentUrl(QStringLiteral("InfinitySlider.qml")), uri, 1, 0, "InfinitySlider");
     qmlRegisterType(componentUrl(QStringLiteral("LibraryPagePicker.qml")), uri, 1, 0, "LibraryPagePicker");
+    qmlRegisterType(componentUrl(QStringLiteral("Menu.qml")), uri, 1, 0, "Menu");
     qmlRegisterType(componentUrl(QStringLiteral("MultiSelectorPage.qml")), uri, 1, 0, "MultiSelectorPage");
     qmlRegisterType(componentUrl(QStringLiteral("KnobIndicator.qml")), uri, 1, 0, "KnobIndicator");
     qmlRegisterType(componentUrl(QStringLiteral("NewStuffPage.qml")), uri, 1, 0, "NewStuffPage");
     qmlRegisterType(componentUrl(QStringLiteral("NotePickerPopup.qml")), uri, 1, 0, "NotePickerPopup");
+    qmlRegisterType(componentUrl(QStringLiteral("NotePad.qml")), uri, 1, 0, "NotePad");
     qmlRegisterType(componentUrl(QStringLiteral("Popup.qml")), uri, 1, 0, "Popup");
     qmlRegisterType(componentUrl(QStringLiteral("PlayGridButton.qml")), uri, 1, 0, "PlayGridButton");
     qmlRegisterType(componentUrl(QStringLiteral("DialogQuestionButtonFocusHighlight.qml")), uri, 1, 0, "DialogQuestionButtonFocusHighlight");
 
+    qmlRegisterType(componentUrl(QStringLiteral("Rating.qml")), uri, 1, 0, "Rating");
+    qmlRegisterType(componentUrl(QStringLiteral("ResetableSlider.qml")), uri, 1, 0, "ResetableSlider");
     qmlRegisterType(componentUrl(QStringLiteral("Stack.qml")), uri, 1, 0, "Stack");
+    qmlRegisterType(componentUrl(QStringLiteral("ScrollableScreenPage.qml")), uri, 1, 0, "ScrollableScreenPage");
     qmlRegisterType(componentUrl(QStringLiteral("ScreenPage.qml")), uri, 1, 0, "ScreenPage");
     qmlRegisterType(componentUrl(QStringLiteral("SelectorPage.qml")), uri, 1, 0, "SelectorPage");
     qmlRegisterType(componentUrl(QStringLiteral("SelectorDelegate.qml")), uri, 1, 0, "SelectorDelegate");
     qmlRegisterType(componentUrl(QStringLiteral("SelectorView.qml")), uri, 1, 0, "SelectorView");
+    qmlRegisterType(componentUrl(QStringLiteral("SelectorWrapper.qml")), uri, 1, 0, "SelectorWrapper");
+    qmlRegisterType(componentUrl(QStringLiteral("SketchpadDial.qml")), uri, 1, 0, "SketchpadDial");
+    qmlRegisterType(componentUrl(QStringLiteral("SketchpadMultiSwitch.qml")), uri, 1, 0, "SketchpadMultiSwitch");
+    qmlRegisterType(componentUrl(QStringLiteral("TabbedControlViewAction.qml")), uri, 1, 0, "TabbedControlViewAction");
+    qmlRegisterType(componentUrl(QStringLiteral("TabbedControlView.qml")), uri, 1, 0, "TabbedControlView");
+    qmlRegisterType(componentUrl(QStringLiteral("TableHeader.qml")), uri, 1, 0, "TableHeader");
+    qmlRegisterType(componentUrl(QStringLiteral("TableHeaderLabel.qml")), uri, 1, 0, "TableHeaderLabel");
 
     qmlRegisterType(componentUrl(QStringLiteral("private/ActionButton.qml")), uri, 1, 0, "ActionButton");
     qmlRegisterType(componentUrl(QStringLiteral("private/SelectorViewBackground.qml")), uri, 1, 0, "SelectorViewBackground");
