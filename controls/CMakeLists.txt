@@ -2,13 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs)
-
 set(PLASMA_RELATIVE_DATA_INSTALL_DIR "plasma")
 set(PLASMA_DATA_INSTALL_DIR "${KDE_INSTALL_DATADIR}/${PLASMA_RELATIVE_DATA_INSTALL_DIR}")
-
-find_package(Qt5 REQUIRED COMPONENTS Core)
 
 ecm_add_qml_module(ZynthboxQmlModule
     VERSION 1.0
@@ -16,13 +11,12 @@ ecm_add_qml_module(ZynthboxQmlModule
     CLASS_NAME ZynthboxKit
     DEPENDENCIES
     "QtQuick.Controls"
-    "Qt5Compat.GraphicalEffects"
     NO_PLUGIN_OPTIONAL)
 
 target_sources(ZynthboxQmlModule
     PRIVATE
-    zynthbox.cpp
-    zynthbox.h
+    assets.qrc
+    zynthbox.h zynthbox.cpp    
     theme.h theme.cpp)
 
 if(QUICK_COMPILER)
@@ -115,7 +109,4 @@ target_link_libraries(ZynthboxQmlModule
 ecm_finalize_qml_module(ZynthboxQmlModule
     DESTINATION ${KDE_INSTALL_QMLDIR})
 
-ecm_generate_qmltypes(${ZB_URI} 1.3 DESTINATION ${KDE_INSTALL_QMLDIR}/io/zynthbox/ui2)
-
-##INSTALL MAUI STYLE
-    # install(DIRECTORY style.5/ DESTINATION ${KDE_INSTALL_QMLDIR}/QtQuick/Controls.2/maui-style)
+ecm_generate_qmltypes(${ZB_URI} 1.0 DESTINATION ${KDE_INSTALL_QMLDIR}/io/zynthbox/ui)

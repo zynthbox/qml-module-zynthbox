@@ -48,7 +48,7 @@ QQC2.ToolButton {
 
         PlasmaCore.Svg {
             id: buttonSvg
-            imagePath: Qt.resolvedUrl("./img/breadcrumb.svg")
+            imagePath: ":/img/breadcrumb.svg"
         }
 
         PlasmaCore.SvgItem {
