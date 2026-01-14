@@ -27,7 +27,7 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.4
 import QtQuick.Controls 2.15 as QQC2
 import org.kde.kirigami 2.4 as Kirigami
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
 Item {
     id: root
@@ -85,7 +85,7 @@ Item {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    ZUI2.SwitchController {
+    ZUI.SwitchController {
         id: switchController
         visible: root.valueType === "bool"
         anchors.fill: parent
@@ -96,7 +96,7 @@ Item {
             root.interacted();
         }
     }
-    ZUI2.DialController {
+    ZUI.DialController {
         id: dialController
         visible: root.valueType !== "bool"
         anchors.fill: parent
@@ -139,7 +139,7 @@ Item {
         }
         height: Kirigami.Units.iconSizes.medium
         width: Kirigami.Units.iconSizes.medium
-        ZUI2.KnobIndicator {
+        ZUI.KnobIndicator {
             anchors.centerIn: parent
             height: Kirigami.Units.iconSizes.small
             width: Kirigami.Units.iconSizes.small

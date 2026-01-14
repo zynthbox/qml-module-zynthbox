@@ -27,10 +27,10 @@ import QtQuick 2.10
 import QtQuick.Layouts 1.4
 import QtQuick.Controls 2.2 as QQC2
 import org.kde.kirigami 2.5 as Kirigami
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
 
-ZUI2.ScreenPage {
+ZUI.ScreenPage {
     id: root
 
     visible: true
@@ -82,7 +82,7 @@ ZUI2.ScreenPage {
                     // TODO: this should eventually go to Window and the panels to View
                     Kirigami.Theme.colorSet: Kirigami.Theme.View
                 }
-                ZUI2.SelectorView {
+                ZUI.SelectorView {
                     id: view
                     Layout.fillWidth: true
                     Layout.fillHeight: true

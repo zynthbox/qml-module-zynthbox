@@ -27,7 +27,7 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15 as QQC2
 import org.kde.kirigami 2.7 as Kirigami
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
 RowLayout {
     id: component
@@ -36,7 +36,7 @@ RowLayout {
     spacing: 0
     Repeater {
         model: component.actions
-        delegate: ZUI2.PlayGridButton {
+        delegate: ZUI.PlayGridButton {
             id: buttonDelegate
             Layout.fillWidth: true
             Layout.fillHeight: true

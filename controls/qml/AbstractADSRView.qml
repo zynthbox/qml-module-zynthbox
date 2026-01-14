@@ -27,9 +27,9 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15 as QQC2
 import org.kde.kirigami 2.6 as Kirigami
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
-ZUI2.Card {
+ZUI.Card {
     id: component
     property double attackValue: 1
     property double attackMax: 1

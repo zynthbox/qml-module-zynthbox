@@ -31,8 +31,8 @@ import org.kde.kirigami 2.4 as Kirigami
 import org.kde.newstuff 1.91 as NewStuff
 import org.kde.plasma.components 3.0 as PlasmaComponents
 
+
 import io.zynthbox.ui 1.0 as ZUI
-import io.zynthbox.ui2 1.0 as ZUI2
 
 Item {
     id: component
@@ -379,7 +379,7 @@ Item {
                 // We're using this as our de-facto single-item view, so just make these the full size of the ListView
                 width: ListView.view.width
                 height: ListView.view.height
-                ZUI2.Card {
+                ZUI.Card {
                     anchors.fill: parent;
                     ColumnLayout {
                         opacity: busyInstallingStuff.running ? 0.3 : 1
@@ -567,7 +567,7 @@ Item {
             }
             height: Kirigami.Units.gridUnit * 5
             visible: component.isLoading;
-            ZUI2.Card {
+            ZUI.Card {
                 anchors {
                     top: parent.top
                     left: busyWithEngineStuffLabel.left
@@ -601,7 +601,7 @@ Item {
                 width: paintedWidth
             }
         }
-        ZUI2.DialogQuestion {
+        ZUI.DialogQuestion {
             id: errorPopup
             rejectText: ""
             acceptText: qsTr("OK")

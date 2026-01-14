@@ -12,7 +12,7 @@ find_package(Qt5 REQUIRED COMPONENTS Core)
 
 ecm_add_qml_module(ZynthboxQmlModule
     VERSION 1.0
-    URI "io.zynthbox.ui2"
+    URI "io.zynthbox.ui"
     CLASS_NAME ZynthboxKit
     DEPENDENCIES
     "QtQuick.Controls"

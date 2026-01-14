@@ -28,7 +28,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15 as QQC2
 import org.kde.kirigami 2.4 as Kirigami
 
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
 QQC2.ItemDelegate {
     id: delegate
@@ -38,7 +38,7 @@ QQC2.ItemDelegate {
     bottomPadding: Kirigami.Units.largeSpacing
     rightPadding: Kirigami.Units.largeSpacing
 
-    background: ZUI2.DelegateBackground {
+    background: ZUI.DelegateBackground {
         delegate: delegate
     }
 }

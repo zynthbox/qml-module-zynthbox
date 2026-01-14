@@ -28,7 +28,7 @@ import QtQuick.Layouts 1.4
 import QtQuick.Window 2.1
 import QtQuick.Controls 2.4 as QQC2
 import org.kde.kirigami 2.6 as Kirigami
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
 Item {
     id: component
@@ -101,7 +101,7 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignTop
         level: 2
-        ZUI2.KnobIndicator {
+        ZUI.KnobIndicator {
             id: knobIndicator
             anchors {
                 top: parent.top

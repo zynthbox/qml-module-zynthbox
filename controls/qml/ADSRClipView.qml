@@ -30,7 +30,7 @@ import QtQuick.Controls 2.15 as QQC2
 import org.kde.kirigami 2.6 as Kirigami
 
 import io.zynthbox.components 1.0 as Zynthbox
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
 Item {
     id: component
@@ -214,7 +214,7 @@ Item {
             }
             onAdsrParametersChanged: update()
         }
-        ZUI2.InfinitySlider {
+        ZUI.InfinitySlider {
             id: attackSlider
             text: qsTr("Attack")
             Layout.fillHeight: true
@@ -237,7 +237,7 @@ Item {
                     component.cppClipObject.selectedSliceObject.adsrAttack = attackSlider.value
                 }
             }
-            ZUI2.KnobIndicator {
+            ZUI.KnobIndicator {
                 anchors {
                     top: parent.bottom
                     horizontalCenter: parent.horizontalCenter
@@ -248,7 +248,7 @@ Item {
                 knobId: 3
             }
         }
-        ZUI2.InfinitySlider {
+        ZUI.InfinitySlider {
             id: decaySlider
             text: qsTr("Decay")
             Layout.fillHeight: true
@@ -271,7 +271,7 @@ Item {
                     component.cppClipObject.selectedSliceObject.adsrDecay = decaySlider.value
                 }
             }
-            ZUI2.KnobIndicator {
+            ZUI.KnobIndicator {
                 anchors {
                     top: parent.bottom
                     horizontalCenter: parent.horizontalCenter
@@ -282,7 +282,7 @@ Item {
                 knobId: 3
             }
         }
-        ZUI2.InfinitySlider {
+        ZUI.InfinitySlider {
             id: sustainSlider
             text: qsTr("Sustain")
             Layout.fillHeight: true
@@ -307,7 +307,7 @@ Item {
                     component.cppClipObject.selectedSliceObject.adsrSustain = sustainSlider.value
                 }
             }
-            ZUI2.KnobIndicator {
+            ZUI.KnobIndicator {
                 anchors {
                     top: parent.bottom
                     horizontalCenter: parent.horizontalCenter
@@ -318,7 +318,7 @@ Item {
                 knobId: 3
             }
         }
-        ZUI2.InfinitySlider {
+        ZUI.InfinitySlider {
             id: releaseSlider
             text: qsTr("Release")
             Layout.fillHeight: true
@@ -341,7 +341,7 @@ Item {
                     component.cppClipObject.selectedSliceObject.adsrRelease = releaseSlider.value
                 }
             }
-            ZUI2.KnobIndicator {
+            ZUI.KnobIndicator {
                 anchors {
                     top: parent.bottom
                     horizontalCenter: parent.horizontalCenter
@@ -362,7 +362,7 @@ Item {
                 text: qsTr("Sustain")
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.top
                         bottom: parent.bottom
@@ -397,7 +397,7 @@ Item {
                 Layout.minimumHeight: 2
                 Layout.maximumHeight: 2
                 color: component.currentADSRElement === 0 || component.currentADSRElement === 2 ? Kirigami.Theme.highlightedTextColor : "transparent"
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.bottom
                         horizontalCenter: parent.horizontalCenter
@@ -419,7 +419,7 @@ Item {
                 text: qsTr("Tilt")
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.top
                         bottom: parent.bottom
@@ -454,7 +454,7 @@ Item {
                 Layout.minimumHeight: 2
                 Layout.maximumHeight: 2
                 color: component.currentADSRElement === 1 || component.currentADSRElement === 3 ? Kirigami.Theme.highlightedTextColor : "transparent"
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.bottom
                         horizontalCenter: parent.horizontalCenter
@@ -476,7 +476,7 @@ Item {
                 text: qsTr("Loop Point")
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.top
                         bottom: parent.bottom
@@ -517,7 +517,7 @@ Item {
                 Layout.minimumHeight: 2
                 Layout.maximumHeight: 2
                 color: component.currentADSRElement === 0 ? Kirigami.Theme.highlightedTextColor : "transparent"
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.bottom
                         horizontalCenter: parent.horizontalCenter
@@ -539,7 +539,7 @@ Item {
                 text: qsTr("Stop Point")
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.top
                         bottom: parent.bottom
@@ -580,7 +580,7 @@ Item {
                 Layout.minimumHeight: 2
                 Layout.maximumHeight: 2
                 color: component.currentADSRElement === 1 ? Kirigami.Theme.highlightedTextColor : "transparent"
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.bottom
                         horizontalCenter: parent.horizontalCenter
@@ -602,7 +602,7 @@ Item {
                 text: qsTr("Amount")
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.top
                         bottom: parent.bottom
@@ -637,7 +637,7 @@ Item {
                 Layout.minimumHeight: 2
                 Layout.maximumHeight: 2
                 color: component.currentADSRElement === 2 ? Kirigami.Theme.highlightedTextColor : "transparent"
-                ZUI2.KnobIndicator {
+                ZUI.KnobIndicator {
                     anchors {
                         top: parent.bottom
                         horizontalCenter: parent.horizontalCenter
@@ -649,7 +649,7 @@ Item {
                 }
             }
         }
-        ZUI2.AbstractADSRView {
+        ZUI.AbstractADSRView {
             id: adsrView
             Layout.fillHeight: true
             Layout.fillWidth: true

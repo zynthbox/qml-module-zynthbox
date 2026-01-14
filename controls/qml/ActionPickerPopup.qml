@@ -30,11 +30,11 @@ import QtQuick.Window 2.1
 import QtQuick.Controls 2.4 as QQC2
 import org.kde.kirigami 2.6 as Kirigami
 
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 
-ZUI2.Popup {
+ZUI.Popup {
     id: component
 
     property list<QQC2.Action> actions
@@ -121,8 +121,8 @@ ZUI2.Popup {
         anchors.fill: parent
         // rowSpacing: Kirigami.Units.largeSpacing
         // columnSpacing: Kirigami.Units.largeSpacing
-        rowSpacing: ZUI2.Theme.padding
-        columnSpacing: ZUI2.Theme.padding
+        rowSpacing: ZUI.Theme.padding
+        columnSpacing: ZUI.Theme.padding
         columns: component.columns
         rows: component.rows
         flow: GridLayout.TopToBottom

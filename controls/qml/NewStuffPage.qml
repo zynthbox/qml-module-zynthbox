@@ -29,10 +29,10 @@ import QtQuick.Controls 2.2 as QQC2
 import org.kde.kirigami 2.4 as Kirigami
 import org.kde.plasma.components 3.0 as PlasmaComponents
 
-import io.zynthbox.ui 1.0 as ZUI
-import io.zynthbox.ui2 1.0 as ZUI2
 
-ZUI2.ScreenPage {
+import io.zynthbox.ui 1.0 as ZUI
+
+ZUI.ScreenPage {
     id: component
     property bool isVisible: zynqtgui.current_screen_id === component.screenId
 
@@ -157,7 +157,7 @@ ZUI2.ScreenPage {
     contextualActions: contentLoader.status == Loader.Ready ? contentLoader.item.contextualActions : []
     contentItem: Item {
         anchors.fill: parent
-        ZUI2.Card {
+        ZUI.Card {
             anchors.centerIn: parent
             height: Kirigami.Units.gridUnit * 10
             width: Kirigami.Units.gridUnit * 15
@@ -187,7 +187,7 @@ ZUI2.ScreenPage {
             height: Kirigami.Units.gridUnit * 5
             width: Kirigami.Units.gridUnit * 5
             visible: contentLoader.status != Loader.Ready
-            ZUI2.Card {
+            ZUI.Card {
                 anchors {
                     top: parent.top
                     left: parent.left

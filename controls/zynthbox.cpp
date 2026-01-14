@@ -43,7 +43,7 @@ void ZynthboxKit::registerTypes(const char *uri)
 {
     qDebug() << "REGISTER ZYNTHBOX KIT TYPES <<<<<<<<<<<<<<<<<<<<<<";
 
-    Q_ASSERT(QLatin1String(uri) == QLatin1String("io.zynthbox.ui2"));
+    Q_ASSERT(QLatin1String(uri) == QLatin1String("io.zynthbox.ui"));
 
     qmlRegisterType(componentUrl(QStringLiteral("ActionPickerPopup.qml")), uri, 1, 0, "ActionPickerPopup");
     qmlRegisterType(componentUrl(QStringLiteral("ActionBar.qml")), uri, 1, 0, "ActionBar");

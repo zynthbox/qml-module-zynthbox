@@ -20,7 +20,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(ZB_URI io.zynthbox.ui2)
+set(ZB_URI io.zynthbox.ui)
 
 set(AUTOMOC_MOC_OPTIONS -Muri=${ZB_URI})
 

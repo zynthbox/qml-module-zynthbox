@@ -27,9 +27,9 @@ import QtQuick 2.11
 import QtQuick.Layouts 1.4
 import QtQuick.Controls 2.2 as QQC2
 import org.kde.kirigami 2.4 as Kirigami
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
-ZUI2.Card {
+ZUI.Card {
     id: root
 
     signal pressedChanged(bool pressed)
@@ -37,7 +37,7 @@ ZUI2.Card {
     signal doubleClicked()
 
     // instance of zynthian_gui_controller.py, TODO: should be registered in qml?
-    property ControllerGroup controller: ZUI2.ControllerGroup {}
+    property ControllerGroup controller: ZUI.ControllerGroup {}
     // Those are automatically binded by default,
     property alias title: heading.text
     property alias heading: heading

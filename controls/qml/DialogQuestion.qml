@@ -28,12 +28,12 @@ import QtQuick.Layouts 1.4
 import QtQuick.Controls 2.15 as QQC2
 import org.kde.kirigami 2.6 as Kirigami
 
+
 import io.zynthbox.ui 1.0 as ZUI
-import io.zynthbox.ui2 1.0 as ZUI2
 
 import io.zynthbox.components 1.0 as Zynthbox
 
-ZUI2.Dialog {
+ZUI.Dialog {
     id: component
 
     /**
@@ -169,7 +169,7 @@ ZUI2.Dialog {
                 Layout.fillHeight: true
                 visible: false
             }
-            ZUI2.PlayGridButton {
+            ZUI.PlayGridButton {
                 id: adjectiveNounButton
                 Layout.fillHeight: true
                 Layout.fillWidth: false
@@ -185,7 +185,7 @@ ZUI2.Dialog {
         }
     }
     footer: RowLayout {
-        ZUI2.PlayGridButton {
+        ZUI.PlayGridButton {
             id: rejectButton
             Layout.preferredWidth: Kirigami.Units.gridUnit * 5
             Layout.preferredHeight: Kirigami.Units.gridUnit * 3
@@ -197,9 +197,9 @@ ZUI2.Dialog {
             onClicked: {
                 component.reject()
             }
-            ZUI2.DialogQuestionButtonFocusHighlight { selectedButton: _private.selectedButton }
+            ZUI.DialogQuestionButtonFocusHighlight { selectedButton: _private.selectedButton }
         }
-        ZUI2.PlayGridButton {
+        ZUI.PlayGridButton {
             id: acceptButton
             Layout.preferredWidth: Kirigami.Units.gridUnit * 5
             Layout.preferredHeight: Kirigami.Units.gridUnit * 3
@@ -211,7 +211,7 @@ ZUI2.Dialog {
             onClicked: {
                 component.accept()
             }
-            ZUI2.DialogQuestionButtonFocusHighlight { selectedButton: _private.selectedButton }
+            ZUI.DialogQuestionButtonFocusHighlight { selectedButton: _private.selectedButton }
         }
     }
 }

@@ -27,9 +27,9 @@ import QtQuick 2.10
 import QtQuick.Layouts 1.4
 import QtQuick.Controls 2.2 as QQC2
 import org.kde.kirigami 2.5 as Kirigami
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
-ZUI2.ScreenPage {
+ZUI.ScreenPage {
     id: root
 
     visible: true
@@ -51,7 +51,7 @@ ZUI2.ScreenPage {
         }
     }
 
-    contentItem: ZUI2.SelectorView {
+    contentItem: ZUI.SelectorView {
         id: view
 
         screenId: root.screenId

@@ -27,7 +27,7 @@ import QtQuick 2.10
 import QtQuick.Layouts 1.4
 import QtQuick.Controls 2.2 as QQC2
 import org.kde.kirigami 2.4 as Kirigami
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
 //NOTE: this is due to a bug in Kirigami.AbstractCard from Buster's version
 QQC2.Control {
@@ -42,7 +42,7 @@ QQC2.Control {
     bottomPadding: background.bottomPadding
 
     // This is done for performance reasons
-    background: ZUI2.CardBackground {
+    background: ZUI.CardBackground {
         id: background
         highlighted: root.highlighted
     }

@@ -27,7 +27,7 @@ import QtQuick 2.10
 import QtQuick.Layouts 1.4
 import QtQuick.Controls 2.2 as QQC2
 import org.kde.kirigami 2.4 as Kirigami
-import io.zynthbox.ui2 1.0 as ZUI2
+import io.zynthbox.ui 1.0 as ZUI
 
 GridLayout {
     rows: 2
@@ -38,7 +38,7 @@ GridLayout {
     property alias sustainController: sustainSlider.controller
     property alias releaseController: releaseSlider.controller
 
-    ZUI2.AbstractADSRView {
+    ZUI.AbstractADSRView {
         id: canvas
         Layout.columnSpan: 4
         implicitWidth: 1
@@ -56,25 +56,25 @@ GridLayout {
         releaseMax: releaseSlider.slider.to
     }
 
-    ZUI2.SliderController {
+    ZUI.SliderController {
         id: attackSlider
         implicitWidth: 1
         implicitHeight: 1
         onValueChanged: canvas.requestPaint()
     }
-    ZUI2.SliderController {
+    ZUI.SliderController {
         id: decaySlider
         implicitWidth: 1
         implicitHeight: 1
         onValueChanged: canvas.requestPaint()
     }
-    ZUI2.SliderController {
+    ZUI.SliderController {
         id: sustainSlider
         implicitWidth: 1
         implicitHeight: 1
         onValueChanged: canvas.requestPaint()
     }
-    ZUI2.SliderController {
+    ZUI.SliderController {
         id: releaseSlider
         implicitWidth: 1
         implicitHeight: 1
