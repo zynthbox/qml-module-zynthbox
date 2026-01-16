@@ -28,49 +28,61 @@ import QtQuick.Layouts 1.4
 import QtQuick.Controls 2.2 as QQC2
 import QtQml.Models 2.10
 import org.kde.kirigami 2.4 as Kirigami
-
+import org.kde.plasma.core 2.0 as PlasmaCore
 import io.zynthbox.ui 1.0 as ZUI
-
 
 QQC2.AbstractButton {
     id: root
-
-//    Layout.preferredWidth: privateProps.headerWidth
-//    Layout.maximumWidth: privateProps.headerWidth
-    Layout.fillHeight: true
+    Kirigami.Theme.inherit: false
+    Kirigami.Theme.colorSet: Kirigami.Theme.Button
 
     property alias subText: contents.text2
-    property alias iconSource: icon.source
-    property var color
+    property alias subSubText: contents.text3
+
+    property alias textSize: contents.text1Size
+    property alias subTextSize: contents.text2Size
+    property alias subSubTextSize: contents.text3Size
+
+    property color color: Kirigami.Theme.backgroundColor
+    property bool highlighted: false
+    property bool highlightOnFocus: true
+    property bool active: true
 
     contentItem: Item {
-        Kirigami.Icon {
-            id: icon
-
-            anchors.centerIn: parent
-            width: 18
-            height: 18
-            color: "white"
-        }
-
         ZUI.TableHeaderLabel {
             id: contents
-            anchors.centerIn: parent
+            anchors.fill: parent
             text: root.text
-            text2: root.subText
+            opacity: root.active ? 1 : 0.3
         }
     }
 
-    onPressed: root.forceActiveFocus();
+    onPressed: root.forceActiveFocus()
 
-    onActiveFocusChanged: {
-        console.log("Item with active Focus :", activeFocus)
-    }
+    background: Item {
+        Rectangle { //TODO: plasma theming
+            anchors.fill: parent
+            visible: !svgBg.visible
+            border.width: (root.highlightOnFocus && root.activeFocus) || root.highlighted ? 1 : 0
+            border.color: Kirigami.Theme.highlightColor
 
-    background: Rectangle { //TODO: plasma theming
-        border.width: root.activeFocus ? 1 : 0
-        border.color: Kirigami.Theme.highlightColor
+            color: root.color
+        }
 
-        color: root.color ? root.color : Kirigami.Theme.backgroundColor
+        PlasmaCore.FrameSvgItem {
+            id: svgBg
+            visible: fromCurrentTheme && highlighted
+            anchors.fill: parent
+
+            property bool highlighted: ((root.highlightOnFocus && root.activeFocus) || root.highlighted)
+            readonly property real leftPadding: fixedMargins.left
+            readonly property real rightPadding: fixedMargins.right
+            readonly property real topPadding: fixedMargins.top
+            readonly property real bottomPadding: fixedMargins.bottom
+
+            imagePath: "widgets/column-delegate-background"
+            prefix: highlighted ? ["focus", ""] : ""
+            colorGroup: PlasmaCore.Theme.ViewColorGroup
+        }
     }
 }
