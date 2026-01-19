@@ -61,6 +61,10 @@ QQC2.ScrollView {
                 root.selector.select_up();
                 returnVal = true;
                 break;
+            case "SWITCH_SELECT_SHORT":
+                root.selector.activate_index(root.currentIndex);
+                returnVal = true;
+                break;
         }
 
         return returnVal;
