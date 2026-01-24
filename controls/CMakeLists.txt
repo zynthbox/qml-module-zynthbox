@@ -34,6 +34,7 @@ ecm_target_qml_sources(ZynthboxQmlModule SOURCES
     
     qml/ActionBar.qml
     qml/Card.qml
+    qml/CellControl.qml
 
     qml/BasicDelegate.qml
     qml/BreadcrumbButton.qml
@@ -58,6 +59,9 @@ ecm_target_qml_sources(ZynthboxQmlModule SOURCES
     qml/Stack.qml
     qml/ScrollableScreenPage.qml
     qml/ScreenPage.qml
+    qml/SectionGroup.qml
+    qml/SectionButton.qml
+    qml/SectionPanel.qml
     qml/SelectorView.qml
     qml/SelectorPage.qml
     qml/SelectorDelegate.qml
@@ -84,7 +88,14 @@ ecm_target_qml_sources(ZynthboxQmlModule PATH private SOURCES
     qml/private/ActionButton.qml
     qml/private/CardBackground.qml
     qml/private/DelegateBackground.qml
-    qml/private/SelectorViewBackground.qml)
+    qml/private/SelectorViewBackground.qml
+    
+    qml/private/ButtonBackground.qml
+    qml/private/FlatButtonBackground.qml
+    qml/private/RaisedButtonBackground.qml
+    qml/private/ButtonFocus.qml
+    qml/private/ButtonShadow.qml
+    qml/private/ButtonHover.qml)
 
 if(QUICK_COMPILER)
     target_sources(ZynthboxQmlModule PRIVATE ${zb_QML_QRC})

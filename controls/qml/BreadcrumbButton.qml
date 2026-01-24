@@ -86,4 +86,3 @@ QQC2.ToolButton {
     font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.2
 }
 
-

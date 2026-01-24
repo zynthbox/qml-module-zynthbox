@@ -63,6 +63,7 @@ void ZynthboxKit::registerTypes(const char *uri)
     qmlRegisterType(componentUrl(QStringLiteral("Button.qml")), uri, 1, 0, "Button");
     qmlRegisterType(componentUrl(QStringLiteral("ComboBox.qml")), uri, 1, 0, "ComboBox");
     qmlRegisterType(componentUrl(QStringLiteral("Card.qml")), uri, 1, 0, "Card");
+    qmlRegisterType(componentUrl(QStringLiteral("CellControl.qml")), uri, 1, 0, "CellControl");
     qmlRegisterType(componentUrl(QStringLiteral("Dialog.qml")), uri, 1, 0, "Dialog");
     qmlRegisterType(componentUrl(QStringLiteral("Drawer.qml")), uri, 1, 0, "Drawer");
     qmlRegisterType(componentUrl(QStringLiteral("DialogQuestion.qml")), uri, 1, 0, "DialogQuestion");
@@ -82,6 +83,9 @@ void ZynthboxKit::registerTypes(const char *uri)
     qmlRegisterType(componentUrl(QStringLiteral("ResetableSlider.qml")), uri, 1, 0, "ResetableSlider");
     qmlRegisterType(componentUrl(QStringLiteral("Stack.qml")), uri, 1, 0, "Stack");
     qmlRegisterType(componentUrl(QStringLiteral("ScrollableScreenPage.qml")), uri, 1, 0, "ScrollableScreenPage");
+    qmlRegisterType(componentUrl(QStringLiteral("SectionGroup.qml")), uri, 1, 0, "SectionGroup");
+    qmlRegisterType(componentUrl(QStringLiteral("SectionButton.qml")), uri, 1, 0, "SectionButton");
+    qmlRegisterType(componentUrl(QStringLiteral("SectionPanel.qml")), uri, 1, 0, "SectionPanel");
     qmlRegisterType(componentUrl(QStringLiteral("ScreenPage.qml")), uri, 1, 0, "ScreenPage");
     qmlRegisterType(componentUrl(QStringLiteral("SelectorPage.qml")), uri, 1, 0, "SelectorPage");
     qmlRegisterType(componentUrl(QStringLiteral("SelectorDelegate.qml")), uri, 1, 0, "SelectorDelegate");

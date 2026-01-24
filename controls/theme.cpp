@@ -34,6 +34,9 @@ void Theme::sync()
 Theme::Theme(QObject *parent)
     : QObject{parent}
     , p_theme(new Plasma::Theme(this))
+    ,m_sectionSpacing(2)
+    ,m_useBreadcrumb(true)
+    ,m_altVolume(false)
 {
     connect(p_theme, &Plasma::Theme::themeChanged, this, [this](){
         setThemeName(p_theme->themeName());
@@ -81,10 +84,17 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_spacing = cg.readEntry("spacing", 1);
         m_padding = cg.readEntry("padding", 1);
         m_radius = cg.readEntry("radius", 4);
+        m_sectionSpacing = cg.readEntry("sectionSpacing", 2);
+        m_useBreadcrumb = cg.readEntry("useBreadcrumb", true);
+        m_altVolume = cg.readEntry("altVolume", false);
+
     } else {
         m_spacing = 1;
         m_padding = 1;
+        m_sectionSpacing=2;
         m_radius = 4;
+        m_useBreadcrumb = true;
+        m_altVolume = false;
     }
 }
 

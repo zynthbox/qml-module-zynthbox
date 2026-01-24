@@ -31,7 +31,7 @@ import org.kde.kirigami 2.4 as Kirigami
 import org.kde.plasma.core 2.0 as PlasmaCore
 import io.zynthbox.ui 1.0 as ZUI
 
-QQC2.AbstractButton {
+ZUI.CellControl {
     id: root
     Kirigami.Theme.inherit: false
     Kirigami.Theme.colorSet: Kirigami.Theme.Button
@@ -43,8 +43,7 @@ QQC2.AbstractButton {
     property alias subTextSize: contents.text2Size
     property alias subSubTextSize: contents.text3Size
 
-    property color color: Kirigami.Theme.backgroundColor
-    property bool highlighted: false
+    highlighted: root.highlightOnFocus && root.activeFocus
     property bool highlightOnFocus: true
     property bool active: true
 
@@ -59,30 +58,4 @@ QQC2.AbstractButton {
 
     onPressed: root.forceActiveFocus()
 
-    background: Item {
-        Rectangle { //TODO: plasma theming
-            anchors.fill: parent
-            visible: !svgBg.visible
-            border.width: (root.highlightOnFocus && root.activeFocus) || root.highlighted ? 1 : 0
-            border.color: Kirigami.Theme.highlightColor
-
-            color: root.color
-        }
-
-        PlasmaCore.FrameSvgItem {
-            id: svgBg
-            visible: fromCurrentTheme && highlighted
-            anchors.fill: parent
-
-            property bool highlighted: ((root.highlightOnFocus && root.activeFocus) || root.highlighted)
-            readonly property real leftPadding: fixedMargins.left
-            readonly property real rightPadding: fixedMargins.right
-            readonly property real topPadding: fixedMargins.top
-            readonly property real bottomPadding: fixedMargins.bottom
-
-            imagePath: "widgets/column-delegate-background"
-            prefix: highlighted ? ["focus", ""] : ""
-            colorGroup: PlasmaCore.Theme.ViewColorGroup
-        }
-    }
 }

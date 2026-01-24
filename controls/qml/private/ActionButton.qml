@@ -24,31 +24,30 @@ For a full copy of the GNU General Public License see the LICENSE.txt file.
 */
 
 import QtQuick 2.10
-import QtQuick.Layouts 1.4
 import QtQuick.Controls 2.2 as QQC2
+import QtQuick.Layouts 1.4
+import io.zynthbox.ui 1.0 as ZUI
 import org.kde.kirigami 2.4 as Kirigami
 
-import io.zynthbox.ui 1.0 as ZUI
-
-QQC2.Button {
+ZUI.SectionButton {
     id: root
+
+    // FIXME: replace it with action: when a more recent Kirigami can be used
+    property Kirigami.Action kirigamiAction
+
     Layout.fillWidth: true
     opacity: enabled ? 1 : 0.4
     implicitWidth: 1 // For even layout partitioning
     enabled: kirigamiAction !== null && kirigamiAction.enabled && kirigamiAction.visible
-    // FIXME: replace it with action: when a more recent Kirigami can be used
-    property Kirigami.Action kirigamiAction
     font.capitalization: Font.AllUppercase
-
     text: kirigamiAction && kirigamiAction.visible ? kirigamiAction.text : ""
     checkable: kirigamiAction && kirigamiAction.checkable
     checked: kirigamiAction && kirigamiAction.checked
-
     onClicked: {
-        if (!kirigamiAction || !kirigamiAction.visible || !kirigamiAction.enabled) {
-            return;
-        }
-        kirigamiAction.trigger()
+        if (!kirigamiAction || !kirigamiAction.visible || !kirigamiAction.enabled)
+            return ;
+
+        kirigamiAction.trigger();
         if (kirigamiAction && kirigamiAction.hasOwnProperty("menuDelegate") && kirigamiAction.menuDelegate) {
             kirigamiAction.menuDelegate.parent = root;
             kirigamiAction.menuDelegate.visible = true;
@@ -57,22 +56,33 @@ QQC2.Button {
         }
     }
 
-    Rectangle {
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-            margins: Kirigami.Units.largeSpacing
-        }
-        visible: (root.kirigamiAction && root.kirigamiAction.hasOwnProperty("children") && root.kirigamiAction.children.length > 0) || (kirigamiAction && kirigamiAction.hasOwnProperty("menuDelegate") && kirigamiAction.menuDelegate)
-        parent: root.background
-        height: Kirigami.Units.smallSpacing
-        color: Kirigami.Theme.highlightColor
-    }
+    showIndicator : (root.kirigamiAction && root.kirigamiAction.hasOwnProperty("children") && root.kirigamiAction.children.length > 0) || (kirigamiAction && kirigamiAction.hasOwnProperty("menuDelegate") && kirigamiAction.menuDelegate)
+
+    // Rectangle {
+    //     visible: (root.kirigamiAction && root.kirigamiAction.hasOwnProperty("children") && root.kirigamiAction.children.length > 0) || (kirigamiAction && kirigamiAction.hasOwnProperty("menuDelegate") && kirigamiAction.menuDelegate)
+    //     parent: root.background
+    //     height: Kirigami.Units.smallSpacing
+    //     color: Kirigami.Theme.highlightColor
+
+    //     anchors {
+    //         left: parent.left
+    //         right: parent.right
+    //         bottom: parent.bottom
+    //         margins: Kirigami.Units.largeSpacing
+    //     }
+
+    // }
 
     ZUI.ActionPickerPopup {
         id: mainActionSubMenu
+
         actions: root.kirigamiAction && root.kirigamiAction.hasOwnProperty("children") ? root.kirigamiAction.children : null
     }
-}
 
+    // background: Rectangle {
+    //     opacity: root.checked ? 0.5 : 1
+    //     color: root.checked ? "#181918" : "#1f2022"
+    //     radius: 2
+    // }
+
+}

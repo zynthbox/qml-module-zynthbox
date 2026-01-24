@@ -36,48 +36,53 @@ QQC2.ToolBar {
     id: root
 
     property Item currentPage
-    padding: ZUI.Theme.padding
-    // leftPadding: Kirigami.Units.smallSpacing
-    // rightPadding: Kirigami.Units.smallSpacing
-    // topPadding: Kirigami.Units.smallSpacing
-    // bottomPadding: Kirigami.Units.smallSpacing
+    // padding: ZUI.Theme.padding
+    padding: 4
+    leftPadding: padding
+    rightPadding: padding
+    topPadding:padding
+    bottomPadding: padding
 
     position: QQC2.ToolBar.Footer
 
-    background: Rectangle {
-        color: Kirigami.Theme.backgroundColor
-        opacity: 0.2
-    }
+    background: Rectangle 
+        {
+            color: "#2e3336"
+        }
 
-    contentItem: RowLayout {
-        spacing: ZUI.Theme.spacing
-        ActionButton {
-            id: backButton
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            visible: kirigamiAction && kirigamiAction.visible
-            kirigamiAction: root.currentPage && root.currentPage.backAction ? root.currentPage.backAction : null
-        }
-        ActionButton {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            kirigamiAction: root.currentPage && root.currentPage.contextualActions && root.currentPage.contextualActions.length > 0 ? root.currentPage.contextualActions[0] : null
-        }
-        ActionButton {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            kirigamiAction: root.currentPage && root.currentPage.contextualActions && root.currentPage.contextualActions.length > 1 ? root.currentPage.contextualActions[1] : null
-        }
-        ActionButton {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            kirigamiAction: root.currentPage && root.currentPage.contextualActions && root.currentPage.contextualActions.length > 2 ? root.currentPage.contextualActions[2] : null
-        }
-        ActionButton {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            visible: !backButton.visible
-            kirigamiAction: root.currentPage && root.currentPage.contextualActions && root.currentPage.contextualActions.length > 3 ? root.currentPage.contextualActions[3] : null
+    contentItem: ZUI.SectionGroup {
+
+        RowLayout {
+            anchors.fill: parent
+            spacing: ZUI.Theme.spacing
+            ActionButton {
+                id: backButton
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: kirigamiAction && kirigamiAction.visible
+                kirigamiAction: root.currentPage && root.currentPage.backAction ? root.currentPage.backAction : null
+            }
+            ActionButton {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                kirigamiAction: root.currentPage && root.currentPage.contextualActions && root.currentPage.contextualActions.length > 0 ? root.currentPage.contextualActions[0] : null
+            }
+            ActionButton {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                kirigamiAction: root.currentPage && root.currentPage.contextualActions && root.currentPage.contextualActions.length > 1 ? root.currentPage.contextualActions[1] : null
+            }
+            ActionButton {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                kirigamiAction: root.currentPage && root.currentPage.contextualActions && root.currentPage.contextualActions.length > 2 ? root.currentPage.contextualActions[2] : null
+            }
+            ActionButton {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: !backButton.visible
+                kirigamiAction: root.currentPage && root.currentPage.contextualActions && root.currentPage.contextualActions.length > 3 ? root.currentPage.contextualActions[3] : null
+            }
         }
     }
 }

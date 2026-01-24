@@ -36,7 +36,7 @@ RowLayout {
     spacing: 0
     Repeater {
         model: component.actions
-        delegate: ZUI.PlayGridButton {
+        delegate: ZUI.SectionButton {
             id: buttonDelegate
             Layout.fillWidth: true
             Layout.fillHeight: true

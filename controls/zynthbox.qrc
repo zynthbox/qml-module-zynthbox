@@ -19,6 +19,7 @@
     <file>qml/BasicDelegate.qml</file>
     <file>qml/Button.qml</file>
     <file>qml/Card.qml</file>
+    <file>qml/CellControl.qml</file>
     <file>qml/ComboBox.qml</file>
     <file>qml/CommonUtils.js</file>
     <file>qml/Dialog.qml</file>
@@ -40,6 +41,9 @@
     <file>qml/ScrollableScreenPage.qml</file>
     <file>qml/ScreenPage.qml</file>
     <file>qml/SelectorView.qml</file>
+    <file>qml/SectionPanel.qml</file>
+    <file>qml/SectionGroup.qml</file>
+    <file>qml/SectionButton.qml</file>
     <file>qml/SelectorPage.qml</file>
     <file>qml/SelectorDelegate.qml</file>
     <file>qml/SelectorWrapper.qml</file>
@@ -51,6 +55,12 @@
     <file>qml/TableHeaderLabel.qml</file>
 
     <file>qml/private/ActionButton.qml</file>
+    <file>qml/private/ButtonBackground.qml</file>
+    <file>qml/private/RaisedButtonBackground.qml</file>
+    <file>qml/private/FlatButtonBackground.qml</file>
+    <file>qml/private/ButtonFocus.qml</file>
+    <file>qml/private/ButtonShadow.qml</file>
+    <file>qml/private/ButtonHover.qml</file>
     <file>qml/private/SelectorViewBackground.qml</file>
     <file>qml/private/DelegateBackground.qml</file>
     <file>qml/private/CardBackground.qml</file>

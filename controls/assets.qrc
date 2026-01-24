@@ -2,5 +2,6 @@
 <RCC>
   <qresource prefix="/">
     <file>img/breadcrumb.svg</file>
+    <file>img/broken-noise.png</file>
     </qresource>
 </RCC>

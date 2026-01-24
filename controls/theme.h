@@ -21,10 +21,16 @@ class Theme : public QObject
     Q_PROPERTY(qreal backgroundIntensity READ backgroundIntensity NOTIFY themeChanged)
     Q_PROPERTY(qreal backgroundSaturation READ backgroundSaturation NOTIFY themeChanged)
     Q_PROPERTY(QString wallpaperPath READ wallpaperPath NOTIFY themeChanged)
+    Q_PROPERTY(int sectionSpacing MEMBER m_sectionSpacing NOTIFY themeChanged)
+    Q_PROPERTY(bool useBreadcrumb MEMBER m_useBreadcrumb NOTIFY themeChanged)
+    Q_PROPERTY(bool altVolume MEMBER m_altVolume NOTIFY themeChanged)
 
 public:
     explicit Theme(QObject *parent = nullptr);
-
+    
+    int m_sectionSpacing = 2;
+    bool m_useBreadcrumb = true;
+    bool m_altVolume = false;
 
     int spacing() const;
     int padding() const;
@@ -59,5 +65,6 @@ private:
     int m_spacing;
     int m_padding;
     int m_radius;
+    
 };
 
