@@ -37,6 +37,7 @@ QQC2.ToolButton {
     Kirigami.Theme.colorSet: Kirigami.Theme.Window
     padding: 0
     leftPadding: 0
+    bottomPadding: 0
     rightPadding: breadcrumbSeparator.width/2
     implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding + Kirigami.Units.gridUnit
     icon.color: root.highlighted || root.pressed ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor

@@ -29,6 +29,7 @@ class Theme : public QObject
     Q_PROPERTY(bool useBreadcrumb MEMBER m_useBreadcrumb NOTIFY themeChanged)
     Q_PROPERTY(bool altVolume MEMBER m_altVolume NOTIFY themeChanged)
     Q_PROPERTY(bool ghostButton MEMBER m_ghostButton NOTIFY themeChanged)
+    Q_PROPERTY(bool monoColorHandles MEMBER m_monoColorHandles NOTIFY themeChanged)
     Q_PROPERTY(QVariantList slotSpacing MEMBER m_slotSpacing NOTIFY themeChanged)
 
 public:
@@ -41,6 +42,7 @@ public:
     bool m_altVolume = false;
     bool m_ghostButton = false;
     QVariantList m_slotSpacing;
+    bool m_monoColorHandles = false;
 
     int spacing() const;
     int padding() const;
