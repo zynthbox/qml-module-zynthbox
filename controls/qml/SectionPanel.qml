@@ -31,7 +31,12 @@ QQC2.Pane {
     //     }
     // }
 
-    padding: ZUI.Theme.padding
+    padding: ZUI.Theme.sectionPadding
+    topPadding: padding
+    bottomPadding: padding
+    rightPadding: padding
+    leftPadding: padding
+    
     background: Rectangle 
     {
         // color: "#2e3336"

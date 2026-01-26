@@ -36,6 +36,9 @@ QQC2.AbstractButton {
     id: root
     padding: 1
 
+    Kirigami.Theme.inherit: false
+    Kirigami.Theme.colorSet: Kirigami.Theme.View
+
     property color backgroundColor : Kirigami.Theme.backgroundColor
     property color highlightColor: Kirigami.Theme.highlightColor
     property bool highlighted: false

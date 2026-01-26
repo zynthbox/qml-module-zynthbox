@@ -37,7 +37,7 @@ QQC2.ToolBar {
 
     property Item currentPage
     // padding: ZUI.Theme.padding
-    padding: 4
+    padding: ZUI.Theme.sectionPadding
     leftPadding: padding
     rightPadding: padding
     topPadding:padding

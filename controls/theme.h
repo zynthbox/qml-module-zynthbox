@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <KSharedConfig>
+#include <QVariantList> 
+
 namespace Plasma{
 class Theme;
 }
@@ -22,15 +24,23 @@ class Theme : public QObject
     Q_PROPERTY(qreal backgroundSaturation READ backgroundSaturation NOTIFY themeChanged)
     Q_PROPERTY(QString wallpaperPath READ wallpaperPath NOTIFY themeChanged)
     Q_PROPERTY(int sectionSpacing MEMBER m_sectionSpacing NOTIFY themeChanged)
+    Q_PROPERTY(int cellSpacing MEMBER m_cellSpacing NOTIFY themeChanged)
+    Q_PROPERTY(int sectionPadding MEMBER m_sectionPadding NOTIFY themeChanged)
     Q_PROPERTY(bool useBreadcrumb MEMBER m_useBreadcrumb NOTIFY themeChanged)
     Q_PROPERTY(bool altVolume MEMBER m_altVolume NOTIFY themeChanged)
+    Q_PROPERTY(bool ghostButton MEMBER m_ghostButton NOTIFY themeChanged)
+    Q_PROPERTY(QVariantList slotSpacing MEMBER m_slotSpacing NOTIFY themeChanged)
 
 public:
     explicit Theme(QObject *parent = nullptr);
     
     int m_sectionSpacing = 2;
+    int m_cellSpacing = 1;
+    int m_sectionPadding = 2;
     bool m_useBreadcrumb = true;
     bool m_altVolume = false;
+    bool m_ghostButton = false;
+    QVariantList m_slotSpacing;
 
     int spacing() const;
     int padding() const;
