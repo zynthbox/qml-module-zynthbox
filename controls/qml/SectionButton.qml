@@ -58,9 +58,13 @@ import "private"  as Private
         PlasmaCore.FrameSvgItem {
 
             readonly property real leftPadding: margins.left
+            property int leftMargin : leftPadding
             readonly property real rightPadding: margins.right
+            property int rightMargin : rightPadding
             readonly property real topPadding: margins.top
+            property int topMargin : topPadding
             readonly property real bottomPadding: margins.bottom
+            property int bottomMargin : bottomPadding
 
             imagePath: "widgets/section_button"
             prefix: root.highlighted || root.checked ? ["focus", ""] : "normal"

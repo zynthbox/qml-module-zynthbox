@@ -29,25 +29,33 @@ import QtQuick.Controls 2.15 as QQC2
 import org.kde.kirigami 2.7 as Kirigami
 import io.zynthbox.ui 1.0 as ZUI
 
-RowLayout {
-    id: component
-    property list<QQC2.Action> actions
+ZUI.SectionGroup {
+    id: control
 
-    spacing: 0
-    Repeater {
-        model: component.actions
-        delegate: ZUI.SectionButton {
-            id: buttonDelegate
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.preferredWidth: Kirigami.Units.gridUnit
-            text: modelData != null && modelData.hasOwnProperty("text") ? modelData.text : ""
-            visible: modelData != null && modelData.hasOwnProperty("visible") ? modelData.visible : true
-            enabled: modelData != null && modelData.hasOwnProperty("enabled") ? modelData.enabled : true
-            checked: modelData != null && modelData.hasOwnProperty("checked") ? modelData.checked : false
-            onClicked: {
-                modelData.trigger();
+    default property alias content : _content.data 
+    property list<QQC2.Action> actions  
+
+    RowLayout {
+        id: _content
+        anchors.fill: parent    
+        spacing: ZUI.Theme.spacing
+        Repeater {
+            model: component.actions
+            delegate: ZUI.SectionButton {
+                id: buttonDelegate
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredWidth: Kirigami.Units.gridUnit
+                text: modelData != null && modelData.hasOwnProperty("text") ? modelData.text : ""
+                visible: modelData != null && modelData.hasOwnProperty("visible") ? modelData.visible : true
+                enabled: modelData != null && modelData.hasOwnProperty("enabled") ? modelData.enabled : true
+                checked: modelData != null && modelData.hasOwnProperty("checked") ? modelData.checked : false
+                highlighted: checked
+                onClicked: {
+                    modelData.trigger();
+                }
             }
         }
     }
 }
+

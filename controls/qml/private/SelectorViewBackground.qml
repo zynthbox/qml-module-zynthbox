@@ -38,7 +38,7 @@ PlasmaCore.FrameSvgItem {
     readonly property real topPadding: margins.top
     readonly property real bottomPadding: margins.bottom
 
-    imagePath: "widgets/background"
+    imagePath: "widgets/page_background"
     prefix: highlighted ? ["focus", ""] : ""
     colorGroup: PlasmaCore.Theme.ViewColorGroup
 
