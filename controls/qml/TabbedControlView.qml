@@ -60,14 +60,14 @@ Item {
 
         switch (cuia) { //TODO: figure out rows and columns
         // Eat select actions
-        case "SWITCH_SELECT_SHORT":
+        case "SWITCH_SELECT_RELEASED":
             if (focusedScope === internalStack) {
                 if (Window.activeFocusItem && Window.activeFocusItem.toggle) {
                     Window.activeFocusItem.toggle()
                 }
             }
             return true;
-        case "NAVIGATE_LEFT":
+        case "SWITCH_ARROW_LEFT_RELEASED":
             if (focusedScope === primaryTabsScope) {
                 return false;
             } else if (focusedScope === internalStack) {
@@ -89,7 +89,7 @@ Item {
             }
 
             return true;
-        case "SELECT_UP":
+        case "SWITCH_ARROW_UP_RELEASED":
             if (focusedScope === primaryTabsScope) {
                 var button = nextFocusItemInScope(primaryTabsScope, false);
                 if (button) {
@@ -114,7 +114,7 @@ Item {
             }
             return true;
 
-        case "SELECT_DOWN":
+        case "SWITCH_ARROW_DOWN_RELEASED":
             if (focusedScope === primaryTabsScope) {
                 var button = nextFocusItemInScope(primaryTabsScope, true);
                 if (button) {
@@ -143,7 +143,7 @@ Item {
             }
 
             return true;
-        case "NAVIGATE_RIGHT":
+        case "SWITCH_ARROW_RIGHT_RELEASED":
             if (focusedScope === primaryTabsScope) {
                 internalStack.forceActiveFocus()
             } else if (focusedScope === internalStack) {

@@ -56,11 +56,11 @@ ZUI.DialogQuestion {
     cuiaCallback: function(cuia) {
         var result = notePicker.opened;
         switch (cuia) {
-            case "SWITCH_BACK_SHORT":
+            case "SWITCH_BACK_RELEASED":
                 notePicker.reject();
                 result = true;
                 break;
-            case "SWITCH_SELECT_SHORT":
+            case "SWITCH_SELECT_RELEASED":
                 notePicker.accept();
                 result = true;
                 break;

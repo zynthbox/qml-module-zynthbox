@@ -51,17 +51,17 @@ QQC2.ScrollView {
         let returnVal = false;
 
         switch(cuia) {
-            case "SELECT_DOWN":
+            case "SWITCH_ARROW_DOWN_RELEASED":
             case "KNOB3_UP":
                 root.selector.select_down();
                 returnVal = true;
                 break;
-            case "SELECT_UP":
+            case "SWITCH_ARROW_UP_RELEASED":
             case "KNOB3_DOWN":
                 root.selector.select_up();
                 returnVal = true;
                 break;
-            case "SWITCH_SELECT_SHORT":
+            case "SWITCH_SELECT_RELEASED":
                 root.selector.activate_index(root.currentIndex);
                 returnVal = true;
                 break;

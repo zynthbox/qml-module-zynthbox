@@ -51,7 +51,6 @@ import "private"  as Private
             imagePath: "widgets/section_button"          
         }
 
-
     Component {
         id: _newButton
 

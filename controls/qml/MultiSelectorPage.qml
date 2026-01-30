@@ -42,15 +42,15 @@ ZUI.ScreenPage {
     cuiaCallback: function(cuia) {
         let currentScreenIndex = root.screenIds.indexOf(zynqtgui.current_screen_id);
         switch (cuia) {
-        case "NAVIGATE_LEFT":
+        case "SWITCH_ARROW_LEFT_RELEASED":
             var newIndex = Math.max(0, currentScreenIndex - 1);
             zynqtgui.current_screen_id = root.screenIds[newIndex];
             return true;
-        case "NAVIGATE_RIGHT":
+        case "SWITCH_ARROW_RIGHT_RELEASED":
             var newIndex = Math.min(root.screenIds.length - 1, currentScreenIndex + 1);
             zynqtgui.current_screen_id = root.screenIds[newIndex];
             return true;
-        case "SWITCH_BACK_SHORT":
+        case "SWITCH_BACK_RELEASED":
             zynqtgui.current_screen_id = screenIds[0];
             zynqtgui.go_back();
             return true;

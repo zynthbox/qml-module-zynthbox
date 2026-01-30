@@ -39,14 +39,14 @@ ZUI.ScreenPage {
     cuiaCallback: function(cuia) {
         switch (cuia) {
             case "KNOB3_DOWN":
-            case "SELECT_UP":
+            case "SWITCH_ARROW_UP_RELEASED":
                 if (contentLoader.item && contentLoader.item.currentIndex > 0) {
                     contentLoader.item.currentIndex -= 1;
                 }
                 return true;
 
             case "KNOB3_UP":
-            case "SELECT_DOWN":
+            case "SWITCH_ARROW_DOWN_RELEASED":
                 if (contentLoader.item && contentLoader.item.currentIndex < contentLoader.item.count - 1) {
                     contentLoader.item.currentIndex += 1;
                 }

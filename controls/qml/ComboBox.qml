@@ -83,20 +83,20 @@ QQC2.Button {
                 var returnValue = true;
                 switch (cuia) {
                     case "KNOB3_UP":
-                    case "SELECT_DOWN":
-                    case "NAVIGATE_RIGHT":
+                    case "SWITCH_ARROW_DOWN_RELEASED":
+                    case "SWITCH_ARROW_RIGHT_RELEASED":
                         root.selectIndex(root.currentIndex + 1);
                         break;
                     case "KNOB3_DOWN":
-                    case "SELECT_UP":
-                    case "NAVIGATE_LEFT":
+                    case "SWITCH_ARROW_UP_RELEASED":
+                    case "SWITCH_ARROW_LEFT_RELEASED":
                         root.selectIndex(root.currentIndex - 1);
                         break;
-                    case "SWITCH_SELECT_SHORT":
+                    case "SWITCH_SELECT_RELEASED":
                         root.activated(root.currentIndex);
                         popupRoot.close();
                         break;
-                    case "SWITCH_BACK_SHORT":
+                    case "SWITCH_BACK_RELEASED":
                         popupRoot.close();
                         break;
                 }

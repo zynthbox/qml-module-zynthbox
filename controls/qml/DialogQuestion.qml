@@ -100,20 +100,20 @@ ZUI.Dialog {
         var result = component.opened;
         switch (cuia) {
             case "KNOB3_DOWN":
-            case "NAVIGATE_LEFT":
+            case "SWITCH_ARROW_LEFT_RELEASED":
                 component.selectPreviousButton();
                 result = true;
                 break;
             case "KNOB3_UP":
-            case "NAVIGATE_RIGHT":
+            case "SWITCH_ARROW_RIGHT_RELEASED":
                 component.selectNextButton();
                 result = true;
                 break;
-            case "SWITCH_BACK_SHORT":
+            case "SWITCH_BACK_RELEASED":
                 component.reject();
                 result = true;
                 break;
-            case "SWITCH_SELECT_SHORT":
+            case "SWITCH_SELECT_RELEASED":
                 if (component.selectedButton.enabled) {
                     component.selectedButton.clicked();
                 }
