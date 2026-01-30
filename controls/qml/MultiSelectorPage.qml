@@ -59,8 +59,12 @@ ZUI.ScreenPage {
         }
     }
 
-    bottomPadding: Kirigami.Units.gridUnit
-
+    background: Rectangle 
+    {
+        color: Kirigami.Theme.backgroundColor
+        opacity: 0.4
+    }
+    
     contentItem: RowLayout {
         id: layout
 

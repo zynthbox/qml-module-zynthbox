@@ -45,6 +45,12 @@ ZUI.ScreenPage {
     // bottomPadding: Kirigami.Units.gridUnit
     Component.onCompleted: view.forceActiveFocus()
 
+    background: Rectangle 
+    {
+        color: Kirigami.Theme.backgroundColor
+        opacity: 0.4
+    }
+
     onFocusChanged: {
         if (focus) {
             view.forceActiveFocus()
