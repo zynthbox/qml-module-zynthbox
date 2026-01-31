@@ -93,7 +93,7 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_altVolume = cg.readEntry("altVolume", false);
         m_ghostButton = cg.readEntry("ghostButton", false);
         m_monoColorHandles = cg.readEntry("monoColorHandles", false);
-        m_slotSpacing = cg.readEntry("slotSpacing", {4,4,4,4,4});
+        m_slotSpacing = cg.readEntry("slotSpacing", {4,20,4,4,4});
 
     } else {
         m_spacing = 1;
