@@ -107,24 +107,28 @@ ColumnLayout {
         }
     }
 
-    RowLayout {
-        id: fineTuneButtons
+    ZUI.SectionGroup {
         Layout.fillWidth: parent
 
-        QQC2.Button {
-            Layout.fillWidth: parent
-            text: "-"
-            onClicked: {
-                dial.value = Math.max(dial.from, dial.value - (buttonStepSize ? buttonStepSize : dial.stepSize))
-                dial.moved()
+        contentItem: RowLayout {
+            id: fineTuneButtons
+            spacing: ZUI.Theme.spacing  
+
+            ZUI.SectionButton {
+                Layout.fillWidth: parent
+                text: "-"
+                onClicked: {
+                    dial.value = Math.max(dial.from, dial.value - (buttonStepSize ? buttonStepSize : dial.stepSize))
+                    dial.moved()
+                }
             }
-        }
-        QQC2.Button {
-            Layout.fillWidth: parent
-            text: "+"
-            onClicked: {
-                dial.value = Math.min(dial.to, dial.value + (buttonStepSize ? buttonStepSize : dial.stepSize))
-                dial.moved()
+            ZUI.SectionButton {
+                Layout.fillWidth: parent
+                text: "+"
+                onClicked: {
+                    dial.value = Math.min(dial.to, dial.value + (buttonStepSize ? buttonStepSize : dial.stepSize))
+                    dial.moved()
+                }
             }
         }
     }

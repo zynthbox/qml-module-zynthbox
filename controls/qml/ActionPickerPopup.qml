@@ -103,8 +103,7 @@ ZUI.Popup {
     parent: QQC2.Overlay.overlay
     y: parent !== null ? parent.mapFromGlobal(0, Math.round(parent.height/2 - height/2)).y : 0
     x: parent !== null ? parent.mapFromGlobal(Math.round(parent.width/2 - width/2), 0).x : 0
-    width: mainLayout.implicitWidth + mainLayout.columnSpacing*2
-    height: mainLayout.implicitHeight + mainLayout.rowSpacing*2
+    
 
     Connections {
         target: component
@@ -116,59 +115,66 @@ ZUI.Popup {
         id: _private
         property int currentIndex: -1
     }
-    GridLayout {
-        id: mainLayout
-        anchors.fill: parent
-        // rowSpacing: Kirigami.Units.largeSpacing
-        // columnSpacing: Kirigami.Units.largeSpacing
-        rowSpacing: ZUI.Theme.padding
-        columnSpacing: ZUI.Theme.padding
-        columns: component.columns
-        rows: component.rows
-        flow: GridLayout.TopToBottom
-        Repeater {
-            model: component.actions
-            delegate: QQC2.Button {
-                id: delegate
-                property int mindex: index
-                Layout.minimumWidth: Kirigami.Units.gridUnit * 12
-                Layout.minimumHeight: Kirigami.Units.gridUnit * 4
-                Layout.maximumWidth: Kirigami.Units.gridUnit * 12
-                Layout.maximumHeight: Kirigami.Units.gridUnit * 4
-                Layout.alignment: Qt.AlignCenter
-                text: modelData != null && modelData.hasOwnProperty("text") ? modelData.text : ""
-                visible: modelData != null && modelData.hasOwnProperty("visible") ? modelData.visible : true
-                enabled: modelData != null && modelData.hasOwnProperty("enabled") ? modelData.enabled : true
-                // opacity: enabled ? 1 : 0.3
-                onClicked: {
-                    component.close();
-                    modelData.trigger();
-                }
-                Rectangle {
-                    parent: _overlay
-                    
-                    z: parent.z + 9999
-                    height: delegate.height + 8
-                    width: delegate.width + 8
-                    x: delegate.x-4
-                    y: delegate.y-4
-                    // anchors {
-                    //     fill: delegate
-                    //     margins: -5
-                    // }
-                    color: "transparent"
-                    border {
-                        width: 2
-                        color:  Kirigami.Theme.textColor
+    contentItem: Item {
+        implicitWidth: mainLayout.implicitWidth
+        implicitHeight: mainLayout.implicitHeight
+
+        GridLayout {
+            id: mainLayout
+            anchors.fill: parent
+            // rowSpacing: Kirigami.Units.largeSpacing
+            // columnSpacing: Kirigami.Units.largeSpacing
+            rowSpacing: ZUI.Theme.spacing
+            columnSpacing: ZUI.Theme.spacing
+            columns: component.columns
+            rows: component.rows
+            flow: GridLayout.TopToBottom
+            Repeater {
+                model: component.actions
+                delegate: QQC2.Button {
+                    id: delegate
+                    property int mindex: index
+                    implicitWidth: Kirigami.Units.gridUnit * 12
+                    implicitHeight: Kirigami.Units.gridUnit * 4
+                    Layout.minimumWidth: implicitWidth
+                    Layout.minimumHeight: implicitHeight
+                    Layout.maximumWidth: implicitWidth
+                    Layout.maximumHeight: implicitHeight
+                    Layout.alignment: Qt.AlignCenter
+                    text: modelData != null && modelData.hasOwnProperty("text") ? modelData.text : ""
+                    visible: modelData != null && modelData.hasOwnProperty("visible") ? modelData.visible : true
+                    enabled: modelData != null && modelData.hasOwnProperty("enabled") ? modelData.enabled : true
+                    // opacity: enabled ? 1 : 0.3
+                    onClicked: {
+                        component.close();
+                        modelData.trigger();
                     }
-                    opacity: _private.currentIndex === index ? 1 : 0
+                    Rectangle {
+                        parent: _overlay
+                        
+                        z: parent.z + 9999
+                        height: delegate.height + 8
+                        width: delegate.width + 8
+                        x: delegate.x-4
+                        y: delegate.y-4
+                        // anchors {
+                        //     fill: delegate
+                        //     margins: -5
+                        // }
+                        color: "transparent"
+                        border {
+                            width: 2
+                            color:  Kirigami.Theme.textColor
+                        }
+                        opacity: _private.currentIndex === index ? 1 : 0
+                    }
                 }
             }
         }
+        Item {
+            id: _overlay
+            anchors.fill: parent
+        }
     }
-
-    Item {
-        id: _overlay
-        anchors.fill: parent
-    }
+   
 }
