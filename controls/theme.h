@@ -31,6 +31,9 @@ class Theme : public QObject
     Q_PROPERTY(bool ghostButton MEMBER m_ghostButton NOTIFY themeChanged)
     Q_PROPERTY(bool monoColorHandles MEMBER m_monoColorHandles NOTIFY themeChanged)
     Q_PROPERTY(QVariantList slotSpacing MEMBER m_slotSpacing NOTIFY themeChanged)
+    Q_PROPERTY(bool altTabs MEMBER m_altTabs NOTIFY themeChanged)
+    Q_PROPERTY(bool altPanels MEMBER m_altPanels NOTIFY themeChanged)
+
 
 public:
     explicit Theme(QObject *parent = nullptr);
@@ -43,6 +46,8 @@ public:
     bool m_ghostButton = false;
     QVariantList m_slotSpacing;
     bool m_monoColorHandles = false;
+    bool m_altTabs=false;
+    bool m_altPanels=false;
 
     int spacing() const;
     int padding() const;

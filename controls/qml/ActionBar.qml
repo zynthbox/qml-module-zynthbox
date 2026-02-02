@@ -46,9 +46,10 @@ QQC2.ToolBar {
     position: QQC2.ToolBar.Footer
 
     background: Rectangle 
-        {
-            color: "#2e3336"
-        }
+    {
+        color: Kirigami.Theme.backgroundColor
+        opacity: 0.4
+    }
 
     contentItem: ZUI.SectionGroup {
 

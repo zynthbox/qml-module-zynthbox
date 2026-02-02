@@ -94,6 +94,8 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_ghostButton = cg.readEntry("ghostButton", false);
         m_monoColorHandles = cg.readEntry("monoColorHandles", false);
         m_slotSpacing = cg.readEntry("slotSpacing", {4,20,4,4,4});
+        m_altTabs = cg.readEntry("altTabs", false);
+        m_altPanels = cg.readEntry("altPanels", false);
 
     } else {
         m_spacing = 1;
@@ -106,7 +108,9 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_altVolume = false;
         m_ghostButton = false;
         m_monoColorHandles = false;
-        m_slotSpacing = {4,4,4,4,4};
+        m_slotSpacing = {4,20,4,4,4};
+        m_altTabs= false;
+        m_altPanels=false;
     }
 }
 
