@@ -92,6 +92,17 @@ QQC2.Control {
                     }
                 }
             }
+
+            Item {
+                Layout.fillWidth: true
+                implicitHeight: 1
+                Rectangle {
+                    height: parent.height
+                    color: control.meterValue > 1 ? "red" : "white"
+                    opacity: width > 1 ? 0.8 : 0
+                    width: parent.width * control.meterValue
+                }
+            }
         }
 
         // Implement a double tap gesture
