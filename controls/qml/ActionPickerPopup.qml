@@ -49,6 +49,7 @@ ZUI.Popup {
                 component.close();
                 result = true;
                 break;
+            case "SWITCH_KNOB3_RELEASED":
             case "SWITCH_SELECT_RELEASED":
                 let theIndex = _private.currentIndex;
                 if (theIndex > -1 && component.actions[theIndex].enabled) {

@@ -92,6 +92,7 @@ QQC2.Button {
                     case "SWITCH_ARROW_LEFT_RELEASED":
                         root.selectIndex(root.currentIndex - 1);
                         break;
+                    case "SWITCH_KNOB3_RELEASED":
                     case "SWITCH_SELECT_RELEASED":
                         root.activated(root.currentIndex);
                         popupRoot.close();

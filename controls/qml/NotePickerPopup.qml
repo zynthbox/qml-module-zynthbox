@@ -60,6 +60,7 @@ ZUI.DialogQuestion {
                 notePicker.reject();
                 result = true;
                 break;
+            case "SWITCH_KNOB3_RELEASED":
             case "SWITCH_SELECT_RELEASED":
                 notePicker.accept();
                 result = true;

@@ -113,6 +113,7 @@ ZUI.Dialog {
                 component.reject();
                 result = true;
                 break;
+            case "SWITCH_KNOB3_RELEASED":
             case "SWITCH_SELECT_RELEASED":
                 if (component.selectedButton.enabled) {
                     component.selectedButton.clicked();
