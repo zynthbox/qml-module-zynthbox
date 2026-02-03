@@ -81,7 +81,7 @@ Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 color: component.visible && modelData.isPlaying ? component.playingBackgroundColor : (modelData.midiNote % 12 === 0 ? component.firstNoteBackground : component.backgroundColor)
-                opacity: subnoteLayout.visible && component.currentSequence && component.currentSequence.activePatternObject
+                opacity: subnoteLayout.visible && component.currentSequence && component.currentSequence.isLoading === false && component.currentSequence.activePatternObject
                     ? Zynthbox.KeyScales.midiNoteOnScale(modelData.midiNote, component.currentSequence.activePatternObject.scaleKey, component.currentSequence.activePatternObject.pitchKey, component.currentSequence.activePatternObject.octaveKey)
                         ? 1
                         : 0.3
