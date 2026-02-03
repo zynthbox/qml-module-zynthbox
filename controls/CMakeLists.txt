@@ -57,6 +57,7 @@ ecm_target_qml_sources(ZynthboxQmlModule SOURCES
     qml/Rating.qml
     qml/ResetableSlider.qml
     qml/Stack.qml
+    qml/SlotControl.qml
     qml/ScrollableScreenPage.qml
     qml/ScreenPage.qml
     qml/SectionGroup.qml

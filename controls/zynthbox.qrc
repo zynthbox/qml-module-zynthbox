@@ -38,6 +38,7 @@
     <file>qml/Rating.qml</file>
     <file>qml/ResetableSlider.qml</file>
     <file>qml/Stack.qml</file>
+    <file>qml/SlotControl.qml</file>
     <file>qml/ScrollableScreenPage.qml</file>
     <file>qml/ScreenPage.qml</file>
     <file>qml/SelectorView.qml</file>

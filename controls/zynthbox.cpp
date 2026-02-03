@@ -82,6 +82,7 @@ void ZynthboxKit::registerTypes(const char *uri)
     qmlRegisterType(componentUrl(QStringLiteral("Rating.qml")), uri, 1, 0, "Rating");
     qmlRegisterType(componentUrl(QStringLiteral("ResetableSlider.qml")), uri, 1, 0, "ResetableSlider");
     qmlRegisterType(componentUrl(QStringLiteral("Stack.qml")), uri, 1, 0, "Stack");
+    qmlRegisterType(componentUrl(QStringLiteral("SlotControl.qml")), uri, 1, 0, "SlotControl");
     qmlRegisterType(componentUrl(QStringLiteral("ScrollableScreenPage.qml")), uri, 1, 0, "ScrollableScreenPage");
     qmlRegisterType(componentUrl(QStringLiteral("SectionGroup.qml")), uri, 1, 0, "SectionGroup");
     qmlRegisterType(componentUrl(QStringLiteral("SectionButton.qml")), uri, 1, 0, "SectionButton");
