@@ -59,10 +59,4 @@ QQC2.Pane {
             colorGroup: PlasmaCore.Theme.ViewColorGroup
         }
     }
-
-    // padding: 2
-    // background: Rectangle {
-    //     color: "#040507"
-    //     radius: 4
-    // }
 }
