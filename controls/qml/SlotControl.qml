@@ -14,9 +14,10 @@ QQC2.Control {
     property bool highlighted
     property bool checked
 
-    property bool dragEnabled
+    property bool dragEnabled: false
     property bool doubleClickEnabled
     property bool clickAndHoldEnabled
+    property bool barVisible: dragEnabled
 
     property bool isEmpty
 
@@ -41,8 +42,8 @@ QQC2.Control {
                 fill: parent
                 margins: ZUI.Theme.padding
             }
-            active: !ZUI.Theme.altVolume
-            visible: control.dragEnabled && active
+            active: !ZUI.Theme.altVolume && control.barVisible
+            visible: active
             sourceComponent: Item {            
                 Rectangle {
                     width: parent.width * control.barValue
@@ -79,8 +80,8 @@ QQC2.Control {
             
             Loader { 
                 Layout.fillWidth: true
-                active: ZUI.Theme.altVolume
-                visible: control.dragEnabled && active
+                active: ZUI.Theme.altVolume && control.barVisible
+                visible: active
                 sourceComponent: Item {
                     implicitHeight: 6                            
                     Rectangle {
