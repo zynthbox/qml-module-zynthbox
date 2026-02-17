@@ -25,6 +25,7 @@ QQC2.Control {
 
     property double barValue : 0.0
     property double meterValue: 0.0
+    property double meterValue2 : 0.0
 
     property alias elide : _label.elide
     property alias color : _label.color
@@ -62,6 +63,18 @@ QQC2.Control {
         ColumnLayout {
             anchors.fill: parent
             spacing: ZUI.Theme.spacing
+            
+            Item {
+                Layout.fillWidth: true
+                implicitHeight: 1
+                Rectangle {
+                    height: parent.height
+                    color: control.meterValue2 > 1 ? "red" : "white"
+                    opacity: width > 1 ? 0.8 : 0
+                    width: parent.width * control.meterValue2
+                }
+            }
+
             QQC2.Label {
                 id: _label
                 Layout.fillWidth: true
