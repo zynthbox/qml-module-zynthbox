@@ -98,6 +98,7 @@ void ZynthboxKit::registerTypes(const char *uri)
     qmlRegisterType(componentUrl(QStringLiteral("TabbedControlView.qml")), uri, 1, 0, "TabbedControlView");
     qmlRegisterType(componentUrl(QStringLiteral("TableHeader.qml")), uri, 1, 0, "TableHeader");
     qmlRegisterType(componentUrl(QStringLiteral("TableHeaderLabel.qml")), uri, 1, 0, "TableHeaderLabel");
+    qmlRegisterType(componentUrl(QStringLiteral("ThreeColumnView.qml")), uri, 1, 0, "ThreeColumnView");
 
     qmlRegisterType(componentUrl(QStringLiteral("private/ActionButton.qml")), uri, 1, 0, "ActionButton");
     qmlRegisterType(componentUrl(QStringLiteral("private/SelectorViewBackground.qml")), uri, 1, 0, "SelectorViewBackground");

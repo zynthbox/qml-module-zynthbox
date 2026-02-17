@@ -54,6 +54,7 @@
     <file>qml/TabbedControlView.qml</file>
     <file>qml/TableHeader.qml</file>
     <file>qml/TableHeaderLabel.qml</file>
+    <file>qml/ThreeColumnView.qml</file>
 
     <file>qml/private/ActionButton.qml</file>
     <file>qml/private/ButtonBackground.qml</file>

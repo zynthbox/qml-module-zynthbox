@@ -27,6 +27,8 @@ QQC2.Control {
     property double meterValue: 0.0
     property double meterValue2 : 0.0
 
+    property bool muted: false
+
     property alias elide : _label.elide
     property alias color : _label.color
     property alias text : _label.text
@@ -116,6 +118,20 @@ QQC2.Control {
                     opacity: width > 1 ? 0.8 : 0
                     width: parent.width * control.meterValue
                 }
+            }
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: Kirigami.Theme.negativeBackgroundColor
+            opacity: control.muted ? 0.7 : 0
+            radius: ZUI.Theme.radius
+
+            QQC2.Label {
+                anchors.centerIn: parent
+                font.bold: true
+                font.pointSize: 14
+                text: qsTr("M", "Short form for muted")
             }
         }
 

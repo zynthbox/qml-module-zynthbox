@@ -73,6 +73,7 @@ ecm_target_qml_sources(ZynthboxQmlModule SOURCES
     qml/TabbedControlView.qml
     qml/TableHeader.qml
     qml/TableHeaderLabel.qml
+    qml/ThreeColumnView.qml
 
     #Controllers
     qml/AbstractController.qml
