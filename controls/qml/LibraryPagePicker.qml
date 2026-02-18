@@ -36,7 +36,7 @@ ZUI.ActionRow {
     actions: [
         Kirigami.Action {
             text: qsTr("Synths")
-            visible: component.selectedChannel && component.selectedChannel.trackType !== "sample-loop" && component.selectedChannel.trackType !== "external"
+            visible: component.selectedChannel && component.selectedChannel.trackType !== "sample-loop" && component.selectedChannel.trackType !== "sample-trig" && component.selectedChannel.trackType !== "external"
             checked: component.libraryName === "synths"
             onTriggered: {
                 if (zynqtgui.current_screen_id !== "preset") {
