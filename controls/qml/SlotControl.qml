@@ -38,6 +38,9 @@ QQC2.Control {
     signal doubleClicked()
     signal moved(double value)
 
+    // gridUnit is density dependent, and on our standard display, it's 24, so... 4 is a sensible sort of threshold at that size, so until we need something more specific, we can heuristics it to this
+    property int dragThreshold: Kirigami.Units.gridUnit / 6
+
     contentItem: Item {
         id: _content
          Loader { 
@@ -145,7 +148,7 @@ QQC2.Control {
             repeat: false
             onTriggered: {
                 if (!delegateMouseArea.dragHappened && !delegateMouseArea.holdHappened) {
-                    control.clicked() 
+                    control.clicked();
                 }
             }
         }
@@ -155,7 +158,7 @@ QQC2.Control {
             interval: 300
             repeat: false
             onTriggered: {
-                delegateMouseArea.dragHappened = false
+                delegateMouseArea.dragHappened = false;
             }
         }
 
@@ -170,7 +173,7 @@ QQC2.Control {
                 if (control.dragEnabled) {
                     delegateMouseArea.initialMouseX = mouse.x
                 }
-                delegateMouseArea.holdHappened = false    
+                delegateMouseArea.holdHappened = false
             }
             onReleased: {
                 if (control.dragEnabled) {
@@ -179,30 +182,30 @@ QQC2.Control {
                 if (control.doubleClickEnabled) {
                     if (doublePressedTimer.running) {
                         doublePressedTimer.stop();
-                        control.doubleClicked()
+                        control.doubleClicked();
                     } else {
                         doublePressedTimer.restart();
                     }
                 } else {
                     if(!delegateMouseArea.holdHappened)
                     {
-                        control.clicked()
+                        control.clicked();
                     }
-                    
                 }
             }
             onMouseXChanged: {
                 if (control.dragEnabled) {
-                    var newVal = ZUI.CommonUtils.clamp(mouse.x / _content.width, 0, 1); 
-                    if(mouse.x - delegateMouseArea.initialMouseX != 0) {
+                    var newVal = ZUI.CommonUtils.clamp(mouse.x / _content.width, 0, 1);
+                    // If we are already dragging, or if we've moved past the threshold, emit the moved signal (and also mark as dragging, just in case it's the first time)
+                    if(delegateMouseArea.dragHappened || Math.abs(mouse.x - delegateMouseArea.initialMouseX) > control.dragThreshold) {
                         delegateMouseArea.dragHappened = true;
-                        control.moved(newVal)   
-                    }                                      
+                        control.moved(newVal);
+                    }
                 }
             }
             onPressAndHold: {
                 if (control.clickAndHoldEnabled && control.highlighted && !delegateMouseArea.dragHappened) {
-                    control.pressAndHold()
+                    control.pressAndHold();
                     delegateMouseArea.holdHappened = true;
                 }
             }
