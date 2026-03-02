@@ -163,7 +163,7 @@ ColumnLayout {
                 right: parent.horizontalCenter
                 rightMargin: parent.paintedWidth / 2
             }
-            width: Kirigami.Units.iconSizes.small
+            width: Kirigami.Units.iconSizes.medium
             visible: root.showKnobIndicator && -1 < knobId && knobId < 4
             knobId: -1
         }
