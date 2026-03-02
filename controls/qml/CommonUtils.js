@@ -134,3 +134,14 @@ function formatTime(seconds) {
     }
     return `${seconds}s`;
 }
+
+function formatFileSize(fileSize) {
+    let units = ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"];
+    for (let unit in units) {
+        if (Math.abs(fileSize) < 1024.0) {
+            return qsTr("%1%2B").arg(fileSize.toFixed(1)).arg(units[unit]);
+        }
+        fileSize /= 1024.0;
+    }
+    return qsTr("%1YiB").arg(fileSize.toFixed(1));
+}
