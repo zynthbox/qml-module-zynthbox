@@ -30,6 +30,39 @@ import org.kde.kirigami 2.4 as Kirigami
 QQC2.Menu {
     id: root
 
+    property var cuiaCallback: function(cuia, originId, track, slot, value) {
+        let result = false;
+        switch (cuia) {
+            case "SWITCH_ARROW_DOWN_RELEASED":
+            case "KNOB3_DOWN":
+                root.currentIndex = Math.max(0, Math.min(root.currentIndex - 1, root.count - 1));
+                result = true;
+                break;
+            case "SWITCH_ARROW_UP_RELEASED":
+            case "KNOB3_UP":
+                root.currentIndex = Math.max(0, Math.min(root.currentIndex + 1, root.count - 1));
+                result = true;
+                break;
+            case "SWITCH_KNOB3_RELEASED":
+            case "SWITCH_SELECT_RELEASED":
+                let theItem = itemAt(root.currentIndex);
+                if (theItem) {
+                    if (theItem.action) {
+                        theItem.action.onTriggered();
+                    } else {
+                        theItem.onClicked();
+                    }
+                } else {
+                    let theAction = actionAt(root.currentIndex);
+                    if (theAction) {
+                        theAction.onTriggered();
+                    }
+                }
+                result = true;
+                break;
+        }
+        return result;
+    }
     /** Handle opened changed to push/pop dialog to zynqtgui dialog stack
       * This will allow main program to pass CUIA events to the dialog stack
       *
