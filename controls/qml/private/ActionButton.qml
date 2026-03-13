@@ -42,7 +42,7 @@ ZUI.SectionButton {
     font.capitalization: Font.AllUppercase
     text: kirigamiAction && kirigamiAction.visible ? kirigamiAction.text : ""
     checkable: kirigamiAction && kirigamiAction.checkable
-    checked: kirigamiAction && kirigamiAction.checked
+    checked: (kirigamiAction && kirigamiAction.checked) || mainActionSubMenu.visible
     onClicked: {
         if (!kirigamiAction || !kirigamiAction.visible || !kirigamiAction.enabled)
             return ;
@@ -52,7 +52,7 @@ ZUI.SectionButton {
             kirigamiAction.menuDelegate.parent = root;
             kirigamiAction.menuDelegate.visible = true;
         } else if (kirigamiAction && kirigamiAction.hasOwnProperty("children") && kirigamiAction.children.length > 0) {
-            mainActionSubMenu.visible = true;
+            mainActionSubMenu.open();
         }
     }
 
@@ -73,10 +73,24 @@ ZUI.SectionButton {
 
     // }
 
-    ZUI.ActionPickerPopup {
+    ZUI.Menu {
         id: mainActionSubMenu
+        width: root.width
+        modal: true
+        x: 0
+        y: ZUI.Theme.altPanels ? root.height : -mainActionSubMenu.height
 
-        actions: root.kirigamiAction && root.kirigamiAction.hasOwnProperty("children") ? root.kirigamiAction.children : null
+        Repeater {
+            model: root.kirigamiAction && root.kirigamiAction.hasOwnProperty("children") ? root.kirigamiAction.children : null
+            delegate: QQC2.MenuItem {
+                width: parent.width
+                // height: visible ? implicitHeight : -implicitHeight
+                enabled: modelData.visible
+                action: modelData
+                checked: modelData.checked
+            }
+        }
+ 
     }
 
     // background: Rectangle {

@@ -46,6 +46,9 @@ QQC2.Pane {
     property alias leftTab : _leftTab.data
     property alias rightTab : _rightTab.data
 
+    property alias rightTabContainer: _rightTabContainer
+    property alias leftTabContainer: _leftTabContainer
+
     property int sideTabsWidth: Kirigami.Units.gridUnit * 6
 
     contentItem: GridLayout {
@@ -57,12 +60,13 @@ QQC2.Pane {
         rows: 1
         columns: 3
 
-        Item {            
+        Item {     
+            id: _leftTabContainer
             Layout.fillWidth: false
-            Layout.fillHeight: true
-            Layout.minimumWidth: control.sideTabsWidth
-            Layout.maximumWidth: control.sideTabsWidth
-            Layout.preferredWidth: control.sideTabsWidth
+            Layout.fillHeight: visible
+            Layout.minimumWidth: visible ? control.sideTabsWidth : 0
+            Layout.maximumWidth:  visible ? control.sideTabsWidth : 0
+            Layout.preferredWidth:  visible ? control.sideTabsWidth : 0
             Layout.column: control.altTabs ? 2: 0
             StackLayout {
                 id: _leftTab
@@ -81,11 +85,12 @@ QQC2.Pane {
         }
 
         Item {
+            id: _rightTabContainer  
             Layout.fillWidth: false
-            Layout.fillHeight: true
-            Layout.minimumWidth: control.sideTabsWidth
-            Layout.maximumWidth: control.sideTabsWidth
-            Layout.preferredWidth: control.sideTabsWidth
+            Layout.fillHeight: visible
+            Layout.minimumWidth: visible ? control.sideTabsWidth : 0
+            Layout.maximumWidth:  visible ? control.sideTabsWidth : 0
+            Layout.preferredWidth:  visible ? control.sideTabsWidth : 0
             Layout.column: control.altTabs ? 0: 2
             StackLayout {
                 id: _rightTab
