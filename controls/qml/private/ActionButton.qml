@@ -61,7 +61,7 @@ ZUI.SectionButton {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: height
-        visible: kirigamiAction.checkable && kirigamiAction.hasOwnProperty("children") && kirigamiAction.children.length > 0
+        visible: kirigamiAction && kirigamiAction.checkable && kirigamiAction.hasOwnProperty("children") && kirigamiAction.children.length > 0
 
         icon.name:"overflow-menu"
         icon.width: 22
