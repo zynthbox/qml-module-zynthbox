@@ -51,8 +51,25 @@ ZUI.SectionButton {
         if (kirigamiAction && kirigamiAction.hasOwnProperty("menuDelegate") && kirigamiAction.menuDelegate) {
             kirigamiAction.menuDelegate.parent = root;
             kirigamiAction.menuDelegate.visible = true;
-        } else if (kirigamiAction && kirigamiAction.hasOwnProperty("children") && kirigamiAction.children.length > 0) {
+        } else if (kirigamiAction && kirigamiAction.hasOwnProperty("children") && kirigamiAction.children.length > 0 && !kirigamiAction.checkable) {
             mainActionSubMenu.open();
+        }
+    }
+
+    QQC2.ToolButton {
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: height
+        visible: kirigamiAction.checkable && kirigamiAction.hasOwnProperty("children") && kirigamiAction.children.length > 0
+
+        icon.name:"overflow-menu"
+        icon.width: 22
+        icon.height: 22
+        onClicked: {
+            if (kirigamiAction && kirigamiAction.hasOwnProperty("children") && kirigamiAction.children.length > 0) {
+                mainActionSubMenu.open();
+            }
         }
     }
 
