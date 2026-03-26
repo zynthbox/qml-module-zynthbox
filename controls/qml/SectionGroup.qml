@@ -15,6 +15,8 @@ QQC2.Pane {
     property Component fallbackBackground : null
     property int fallbackPadding: 0
 
+    property bool highlighted: false
+
     default property alias content : _content.data
 
 // If there is not a section panel background, then do not add any padding
@@ -56,6 +58,7 @@ QQC2.Pane {
             readonly property real bottomPadding: margins.bottom
 
             imagePath: "widgets/sectiongroup_background"
+            prefix: root.highlighted ? "focus" : ""
             colorGroup: PlasmaCore.Theme.ViewColorGroup
         }
     }

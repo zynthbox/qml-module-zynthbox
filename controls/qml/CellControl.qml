@@ -34,7 +34,6 @@ import io.zynthbox.ui 1.0 as ZUI
 
 QQC2.AbstractButton {
     id: root
-    padding: 1
 
     Kirigami.Theme.inherit: false
     Kirigami.Theme.colorSet: Kirigami.Theme.View
@@ -43,14 +42,22 @@ QQC2.AbstractButton {
     property color highlightColor: Kirigami.Theme.highlightColor
     property bool highlighted: false
 
-    background: Item {
-        Rectangle {
-            anchors.fill: parent
-            visible: !svgBg.visible
-            border.width: root.highlighted ? 1 : 0
-            border.color: root.highlightColor
+    property Component fallbackBackground : Rectangle {
+        border.width: root.highlighted ? 1 : 0
+        border.color: root.highlightColor
 
-            color: root.backgroundColor
+        color: root.backgroundColor
+    }
+
+    property int fallbackPadding: 1
+    padding: fallbackPadding
+
+    background: Item {
+
+        Loader {
+            anchors.fill: parent
+            active: !svgBg.visible
+            sourceComponent: root.fallbackBackground
         }
 
         PlasmaCore.FrameSvgItem {
@@ -68,11 +75,4 @@ QQC2.AbstractButton {
             colorGroup: PlasmaCore.Theme.ButtonColorGroup
         }
     }
-
-    // background: Rectangle {
-    //     property bool highlighted: ((root.highlightOnFocus && root.activeFocus) || root.highlighted)
-    //     opacity: highlighted ? 0.2 : 1
-    //     color: "#1f2022"
-    //     radius: ZUI.Theme.radius
-    // }
 }
