@@ -49,7 +49,11 @@ Item {
         }
     }
     property int modulationValue: Math.max(-127, Math.min(slidePoint.slideY * 127 / width, 127))
-    onModulationValueChanged: Zynthbox.PlayGridManager.modulation = modulationValue;
+    onModulationValueChanged: {
+        if (slidePoint.playingNote) {
+            slidePoint.playingNote.sendModulation(modulationValue);
+        }
+    }
 
     // Whether or not pressing and holding the button should be visualised
     property bool visualPressAndHold: false
@@ -202,8 +206,8 @@ Item {
                         note.setOff();
                         component.noteOff(note);
                         note.sendPitchChange(0);
-                        note = undefined;
-                        Zynthbox.PlayGridManager.modulation = 0;
+                        note.sendModulation(0);
+                        slidePoint.playingNote = undefined;
                     }
                 }
                 Component.onDestruction: {
