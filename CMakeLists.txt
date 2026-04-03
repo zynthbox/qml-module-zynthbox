@@ -70,6 +70,7 @@ endif()
 add_compile_definitions(QT_DISABLE_DEPRECATED_UP_TO=0x050F00)
 
 add_subdirectory(controls)
+add_subdirectory(mpris2)
 
 ##Clang formatting
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
