@@ -6,6 +6,7 @@
 
 #include "mpris2engine.h"
 #include "mpris2player.h"
+#include "playersmodel.h"
 
 class Mpris2Plugin : public QQmlExtensionPlugin
 {
@@ -20,6 +21,8 @@ public:
         qmlRegisterType<Mpris2Engine>(uri, 1, 0, "Mpris");
         qmlRegisterUncreatableType<Mpris2Player>(uri, 1, 0, "MprisPlayer",
                                                  QStringLiteral("Cannot create MprisPlayer object"));
+        qmlRegisterUncreatableType<PlayersModel>(uri, 1, 0, "PlayersModel",
+                                                 QStringLiteral("Cannot create PlayersModel object"));
     }
 };
 

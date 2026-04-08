@@ -9,7 +9,7 @@ find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS
 
 ecm_add_qml_module(ZynthboxQmlModule_MPRIS
     VERSION 1.0
-    URI "io.zynthbox.mpris"
+    URI ${ZB_MRPIS_URI}
     CLASS_NAME ZynthboxKitMRPIS
     DEPENDENCIES
     "QtQuick.Controls"
@@ -36,8 +36,8 @@ target_sources(ZynthboxQmlModule_MPRIS
     plugin.cpp
     ${mpris2_SRCS})
 
-# ecm_target_qml_sources(ZynthboxQmlModule_MPRIS SOURCES
-#     qml/PayerCard.qml)
+ecm_target_qml_sources(ZynthboxQmlModule_MPRIS SOURCES
+    controls/PlayersView.qml)
 
 target_link_libraries(ZynthboxQmlModule_MPRIS
     PUBLIC
