@@ -43,9 +43,16 @@ Item {
 
     ListView {
         anchors.fill: parent
+        orientation: ListView.Horizontal
+        interactive: true
+        // Snaps the view so only one item at a time is flicked through
+        snapMode: ListView.SnapOneItem
+    
+        // Optional: Strictly aligns the current item in the view
+        highlightRangeMode: ListView.StrictlyEnforceRange
        
         model: _mpris.players
-        delegate: QQC2.Control {
+        delegate: QQC2.Pane {
             id: _card
             height: ListView.view.height
             width: ListView.view.width    
@@ -116,18 +123,81 @@ Item {
 
             readonly property string identity: !_card.noPlayer ? player.identity || _card.sourceName : ""
 
-              property string sourceName: player ? player.serviceName : ""
-                property string playerName: player ? player.identity : ""
-                property string playerIcon: player ? player.iconName : ""
+            property string sourceName: player ? player.serviceName : ""
+            property string playerName: player ? player.identity : ""
+            property string playerIcon: player ? player.iconName : ""
+
+            property bool disablePositionUpdate: false
+
+            onPositionChanged:
+            {
+                // we don't want to interrupt the user dragging the slider
+                if (!seekSlider.pressed)
+                {
+                    // we also don't want passive position updates
+                    disablePositionUpdate = true
+                    seekSlider.value = position
+                    disablePositionUpdate = false
+                }
+            }
+
+            onLengthChanged:
+            {
+                disablePositionUpdate = true
+                // When reducing maximumValue, value is clamped to it, however
+                // when increasing it again it gets its old value back.
+                // To keep us from seeking to the end of the track when moving
+                // to a new track, we'll reset the value to zero and ask for the position again
+                seekSlider.value = 0
+                seekSlider.to = _card.length
+                _card.player.updatePosition()
+                disablePositionUpdate = false
+            }
+
+            Component.onCompleted:
+            {
+                _card.player.updatePosition();
+            }
+
+            Timer
+            {
+                id: seekTimer
+                interval: 1000 / _card.rate
+                repeat: true
+                running: _card.isPlaying && interval > 0 && seekSlider.to >= 1000000
+                onTriggered:
+                {
+                    // some players don't continuously update the seek slider position via mpris
+                    // add one second; value in microseconds
+                    if (!seekSlider.pressed)
+                    {
+                        disablePositionUpdate = true
+                        if (seekSlider.value == seekSlider.to)
+                        {
+                            _card.player.updatePosition();
+                        } else
+                        {
+                            seekSlider.value += 1000000
+                        }
+                        disablePositionUpdate = false
+                    }
+                }
+            }
+
 
             contentItem: RowLayout {
                 Item {
-                    Layout.preferredHeight: 100
-                    Layout.preferredWidth: 100
+                    Layout.minimumWidth: 100
+                    Layout.maximumWidth: 500
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     Layout.alignment: Qt.AlignCenter
 
                     Image {
-                        anchors.fill: parent
+                        width: parent.width
+                        sourceSize.width: width
+                        fillMode: Image.PreserveAspectFit
+                        anchors.centerIn: parent
                         source: _card.albumArt
                     }
                 }
@@ -151,6 +221,40 @@ Item {
 
                     QQC2.Label {
                         text: _card.position
+                    }
+
+                    QQC2.Slider {
+                        id: seekSlider
+                        orientation: Qt.Horizontal
+                        enabled: _card.canSeek
+                        Layout.fillWidth: true
+                        implicitHeight: visible ? 22 : 0
+                        from: 0
+                        value: 0
+                        to: _card.length
+
+                        onMoved:
+                        {
+                            if (!_card.disablePositionUpdate)
+                            {
+                                // delay setting the position to avoid race conditions
+                                queuedPositionUpdate.restart()
+                            }
+                        }
+
+                        Timer
+                        {
+                            id: queuedPositionUpdate
+                            interval: 100
+                            onTriggered:
+                            {
+                                if (_card.position == seekSlider.value) {
+                                    return;
+                                }
+
+                                _card.player.setPosition(seekSlider.value)
+                            }
+                        }
                     }
                 }
             }
