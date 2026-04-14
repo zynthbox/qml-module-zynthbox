@@ -96,6 +96,21 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_slotSpacing = cg.readEntry("slotSpacing", {4,20,4,4,4});
         m_altTabs = cg.readEntry("altTabs", false);
         m_altPanels = cg.readEntry("altPanels", false);
+        m_buttonActiveColor = cg.readEntry("buttonActiveColor", QColor(0, 255, 0, 255));
+        m_buttonInactiveColor = cg.readEntry("buttonInactiveColor", QColor(0, 0, 255, 255));
+        m_buttonOffColor = cg.readEntry("buttonOffColor", QColor(0, 0, 0, 255));
+        m_stepEmptyColor = cg.readEntry("stepEmptyColor", QColor(26, 26, 26, 255));
+        m_stepWithNotesDimmedColor = cg.readEntry("stepWithNotesDimmedColor", QColor(0, 0, 179, 255));
+        m_stepWithNotesColor = cg.readEntry("stepWithNotesColor", QColor(128, 128, 255, 255));
+        m_stepHighlightedColor = cg.readEntry("stepHighlightedColor", QColor(128, 255, 255, 255));
+        m_stepMutedColor = cg.readEntry("stepMutedColor", QColor(128, 0, 0, 255));
+        m_stepCurrentColor = cg.readEntry("stepCurrentColor", QColor(255, 255, 0, 255));
+        m_stepRecordingColor = cg.readEntry("stepRecordingColor", QColor(255, 0, 0, 255));
+        m_sequencerModeColor = cg.readEntry("sequencerModeColor", QColor(0, 255, 255, 255));
+        m_trackClipModeColor = cg.readEntry("trackClipModeColor", QColor(255, 0, 255, 255));
+        m_musicalKeysModeColor = cg.readEntry("musicalKeysModeColor", QColor(255, 255, 0, 255));
+        m_velocityKeysModeColor = cg.readEntry("velocityKeysModeColor", QColor(0, 255, 255, 255));
+        m_slotModeColor = cg.readEntry("slotModeColor", QColor(0, 255, 0, 255));
 
     } else {
         m_spacing = 1;
@@ -111,6 +126,21 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_slotSpacing = {4,20,4,4,4};
         m_altTabs= false;
         m_altPanels=false;
+        m_buttonActiveColor = QColor(0, 255, 0, 255);
+        m_buttonInactiveColor = QColor(0, 0, 255, 255);
+        m_buttonOffColor = QColor(0, 0, 0, 255);
+        m_stepEmptyColor = QColor(26, 26, 26, 255);
+        m_stepWithNotesDimmedColor = QColor(0, 0, 179, 255);
+        m_stepWithNotesColor = QColor(128, 128, 255, 255);
+        m_stepHighlightedColor = QColor(128, 255, 255, 255);
+        m_stepMutedColor = QColor(128, 0, 0, 255);
+        m_stepCurrentColor = QColor(255, 255, 0, 255);
+        m_stepRecordingColor = QColor(255, 0, 0, 255);
+        m_sequencerModeColor = QColor(0, 255, 255, 255);
+        m_trackClipModeColor = QColor(255, 0, 255, 255);
+        m_musicalKeysModeColor = QColor(255, 255, 0, 255);
+        m_velocityKeysModeColor = QColor(0, 255, 255, 255);
+        m_slotModeColor = QColor(0, 255, 0, 255);
     }
 }
 
