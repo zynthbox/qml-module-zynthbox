@@ -6,10 +6,12 @@ project(ZynthboxQmlModule_XTask VERSION 1.0.0 DESCRIPTION "A task manager for Zy
 set(ZB_XTASK_URI io.zynthbox.xtask)
 
 find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS
-    DBus)
+    DBus
+    X11Extras)
 
 find_package(KF${KF_MAJOR_VERSION} ${REQUIRED_KF_VERSION} REQUIRED COMPONENTS
-    WindowSystem)
+    WindowSystem
+    IconThemes)
 
 ecm_add_qml_module(${PROJECT_NAME}
     VERSION 1.0
@@ -34,8 +36,10 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC
     Qt${QT_MAJOR_VERSION}::Core
     Qt${QT_MAJOR_VERSION}::DBus
+    Qt5::X11Extras
     KF5::ConfigCore
     KF5::WindowSystem
+    KF5::IconThemes
     PRIVATE
     Qt${QT_MAJOR_VERSION}::Widgets
     Qt${QT_MAJOR_VERSION}::QuickControls2)

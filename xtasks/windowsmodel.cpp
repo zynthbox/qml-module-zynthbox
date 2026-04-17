@@ -2,7 +2,8 @@
 #include <KWindowSystem/KWindowSystem>
 #include <KWindowSystem/KWindowInfo>
 #include <KWindowSystem/KX11Extras>
-
+#include <QIcon>
+#include <KIconLoader>
 WindowsModel::WindowsModel(QObject *parent) : QAbstractListModel(parent)
 {
     connect(KX11Extras::self(), &KX11Extras::windowAdded, this, &WindowsModel::refresh);
@@ -30,14 +31,14 @@ QVariant WindowsModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     WId winId = KX11Extras::windows().at(index.row());
-    KWindowInfo info(winId, NET::WMName | NET::WMIcon | NET::WMState);
+    KWindowInfo info(winId, NET::WMName | NET::WMIcon | NET::WMState | NET::WMIconName, NET::WM2WindowClass);
     switch (role) {
     case WindowIdRole:
         return QString::number(winId);
     case WindowTitleRole:
         return info.name();
     case WindowIconRole:
-        return info.iconName();
+        return QString(info.windowClassName());
     case WindowIsActiveRole:
         return info.hasState(NET::Focused);
     case WindowIsMinimizedRole:
@@ -67,6 +68,19 @@ QHash<int, QByteArray> WindowsModel::roleNames() const
 void WindowsModel::refresh(WId id)
 {
     beginResetModel();
+    emit countChanged();
     endResetModel();
+}
+
+static QIcon iconFor(WId id)
+{
+    QIcon icon;
+
+    icon.addPixmap(KWindowSystem::icon(id, KIconLoader::SizeSmall, KIconLoader::SizeSmall, false));
+    icon.addPixmap(KWindowSystem::icon(id, KIconLoader::SizeSmallMedium, KIconLoader::SizeSmallMedium, false));
+    icon.addPixmap(KWindowSystem::icon(id, KIconLoader::SizeMedium, KIconLoader::SizeMedium, false));
+    icon.addPixmap(KWindowSystem::icon(id, KIconLoader::SizeLarge, KIconLoader::SizeLarge, false));
+
+    return icon;
 }
 

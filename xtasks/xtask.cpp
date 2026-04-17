@@ -3,6 +3,8 @@
 #include <KWindowSystem/KX11Extras>
 #include <KWindowSystem/KWindowInfo>
 #include <KWindowSystem/KWindowSystem>  
+#include <NETWM>
+#include <QX11Info>
 
 XTask::XTask(QObject *parent) : QObject(parent)
 {
@@ -18,7 +20,19 @@ void XTask::activate(const QString &windowId)
 void XTask::close(const QString &windowId)
 {
     WId winId = windowId.toULongLong();
-    // KX11Extras::closeWindow(winId);
+    KWindowInfo wInfo(winId, NET::WMState);
+    if (!wInfo.valid()) {
+        return;
+    }
+
+    NETRootInfo ri(QX11Info::connection(), NET::CloseWindow);
+    ri.closeWindowRequest(winId);
+}
+
+void XTask::closeActiveWindow()
+{
+    WId activeWinId = KX11Extras::activeWindow();
+    close(QString::number(activeWinId));
 }
 
 void XTask::toggle(const QString &windowId)
@@ -52,13 +66,21 @@ void XTask::unmaximize(const QString &windowId)
 void XTask::show(const QString &windowId)
 {
     WId winId = windowId.toULongLong();
-    // KX11Extras::showWindow(winId);
+    KX11Extras::unminimizeWindow(winId);
 }
 
 void XTask::hide(const QString &windowId)
 {
     WId winId = windowId.toULongLong();
     // KX11Extras::hideWindow(winId);
+}
+
+void XTask::minimizeActiveWindow()
+{
+    WId activeWinId = KX11Extras::activeWindow();
+    if (activeWinId) {
+        KX11Extras::minimizeWindow(activeWinId);
+    }
 }
 
 WindowsModel *XTask::windowsModel()

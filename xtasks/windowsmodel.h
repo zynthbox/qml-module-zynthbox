@@ -6,6 +6,7 @@
 class WindowsModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 
 public:
     enum Roles {
@@ -24,4 +25,6 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 public slots:
     void refresh(WId id = 0);
+signals:
+    void countChanged();
 };
