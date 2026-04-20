@@ -98,6 +98,7 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_altPanels = cg.readEntry("altPanels", false);
         m_buttonActiveColor = cg.readEntry("buttonActiveColor", QColor(0, 255, 0, 255));
         m_buttonInactiveColor = cg.readEntry("buttonInactiveColor", QColor(0, 0, 255, 255));
+        m_buttonNegetiveColor = cg.readEntry("buttonNegetiveColor", QColor(255, 0, 0, 255));
         m_buttonOffColor = cg.readEntry("buttonOffColor", QColor(0, 0, 0, 255));
         m_stepEmptyColor = cg.readEntry("stepEmptyColor", QColor(26, 26, 26, 255));
         m_stepWithNotesDimmedColor = cg.readEntry("stepWithNotesDimmedColor", QColor(0, 0, 179, 255));
@@ -128,6 +129,7 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_altPanels=false;
         m_buttonActiveColor = QColor(0, 255, 0, 255);
         m_buttonInactiveColor = QColor(0, 0, 255, 255);
+        m_buttonNegetiveColor = QColor(255, 0, 0, 255);
         m_buttonOffColor = QColor(0, 0, 0, 255);
         m_stepEmptyColor = QColor(26, 26, 26, 255);
         m_stepWithNotesDimmedColor = QColor(0, 0, 179, 255);

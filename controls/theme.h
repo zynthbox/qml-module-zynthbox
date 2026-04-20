@@ -36,6 +36,7 @@ class Theme : public QObject
     Q_PROPERTY(bool altPanels MEMBER m_altPanels NOTIFY themeChanged)
     Q_PROPERTY(QColor buttonActiveColor MEMBER m_buttonActiveColor NOTIFY themeChanged)
     Q_PROPERTY(QColor buttonInactiveColor MEMBER m_buttonInactiveColor NOTIFY themeChanged)
+    Q_PROPERTY(QColor buttonNegetiveColor MEMBER m_buttonNegetiveColor NOTIFY themeChanged)
     Q_PROPERTY(QColor buttonOffColor MEMBER m_buttonOffColor NOTIFY themeChanged)
     Q_PROPERTY(QColor stepEmptyColor MEMBER m_stepEmptyColor NOTIFY themeChanged)
     Q_PROPERTY(QColor stepWithNotesDimmedColor MEMBER m_stepWithNotesDimmedColor NOTIFY themeChanged)
@@ -69,6 +70,7 @@ public:
     // and are defined in zynthian_gui_theme_chooser.py
     QColor m_buttonActiveColor = QColor(0, 255, 0, 255);
     QColor m_buttonInactiveColor = QColor(0, 0, 255, 255);
+    QColor m_buttonNegetiveColor = QColor(255, 0, 0, 255);
     QColor m_buttonOffColor = QColor(0, 0, 0, 255);
     QColor m_stepEmptyColor = QColor(26, 26, 26, 255);
     QColor m_stepWithNotesDimmedColor = QColor(0, 0, 179, 255);
