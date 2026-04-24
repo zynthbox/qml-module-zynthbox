@@ -8,6 +8,7 @@ WindowsModel::WindowsModel(QObject *parent) : QAbstractListModel(parent)
 {
     connect(KX11Extras::self(), &KX11Extras::windowAdded, this, &WindowsModel::refresh);
     connect(KX11Extras::self(), &KX11Extras::windowRemoved, this, &WindowsModel::refresh);
+    connect(KX11Extras::self(), &KX11Extras::windowChanged, this, &WindowsModel::onWindowChanged);
     // connect(KWindowSystem::self(), &KWindowSystem::windowActivated, this, &WindowsModel::refresh);
     // connect(KWindowSystem::self(), &KWindowSystem::windowDemandsAttentionChanged, this, &WindowsModel::refresh);    
     // connect(KWindowSystem::self(), &KWindowSystem::windowMinimized, this, &WindowsModel::refresh);
@@ -17,6 +18,18 @@ WindowsModel::WindowsModel(QObject *parent) : QAbstractListModel(parent)
     // connect(KWindowSystem::self(), &KWindowSystem::windowHidden, this, &WindowsModel::refresh);
     // connect(KWindowSystem::self(), &KWindowSystem::windowShown, this, &WindowsModel::refresh);          
 }  
+
+void WindowsModel::onWindowChanged(WId id, NET::Properties properties, NET::Properties2 properties2)
+{
+    //  if (properties.testFlag(NET::WMVisibleName) || properties.testFlag(NET::WMName))
+    //     this->refresh(id);
+
+
+    // XXX: we are setting window icon geometry -> don't need to handle NET::WMIconGeometry
+    // Icon of the button can be based on windowClass
+    // if (properties.testFlag(NET::WMIcon) || properties2.testFlag(NET::WM2WindowClass))
+    //     emit windowPropertyChanged(windowId, int(LXQtTaskBarWindowProperty::Icon));
+}
 
 int WindowsModel::rowCount(const QModelIndex &parent) const
 {
@@ -32,6 +45,7 @@ QVariant WindowsModel::data(const QModelIndex &index, int role) const
 
     WId winId = KX11Extras::windows().at(index.row());
     KWindowInfo info(winId, NET::WMName | NET::WMIcon | NET::WMState | NET::WMIconName, NET::WM2WindowClass);
+
     switch (role) {
     case WindowIdRole:
         return QString::number(winId);

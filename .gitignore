@@ -10,3 +10,4 @@ __pycache__
 .qtcreator
 build/
 .clang-format
+*.DS_Store

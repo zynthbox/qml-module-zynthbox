@@ -23,8 +23,10 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
+
 public slots:
     void refresh(WId id = 0);
+    void onWindowChanged(WId id, NET::Properties properties, NET::Properties2 properties2);
 signals:
     void countChanged();
 };

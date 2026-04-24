@@ -8,6 +8,9 @@
 
 XTask::XTask(QObject *parent) : QObject(parent)
 {
+    connect(KX11Extras::self(), &KX11Extras::activeWindowChanged, [this]() {
+        emit activeWindowChanged();
+    });
 
 }
 
@@ -89,4 +92,14 @@ WindowsModel *XTask::windowsModel()
         m_windowsModel = new WindowsModel(const_cast<XTask *>(this));
     }
     return m_windowsModel;
+}
+
+QString XTask::activeWindow()
+{
+    WId activeWinId = KX11Extras::activeWindow();
+    if (activeWinId) {
+        KWindowInfo info(activeWinId, NET::WMName | NET::WMIcon | NET::WMState | NET::WMIconName, NET::WM2WindowClass);
+        return info.windowClassName();
+    }
+    return QString();
 }
