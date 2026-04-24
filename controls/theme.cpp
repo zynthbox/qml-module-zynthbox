@@ -107,7 +107,7 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_stepMutedColor = cg.readEntry("stepMutedColor", QColor(128, 0, 0, 255));
         m_stepCurrentColor = cg.readEntry("stepCurrentColor", QColor(255, 255, 0, 255));
         m_stepRecordingColor = cg.readEntry("stepRecordingColor", QColor(255, 0, 0, 255));
-        m_sequencerModeColor = cg.readEntry("sequencerModeColor", QColor(0, 255, 255, 255));
+        m_sequencerModeColor = cg.readEntry("sequencerModeColor", QColor(255, 0, 0, 255));
         m_trackClipModeColor = cg.readEntry("trackClipModeColor", QColor(255, 0, 255, 255));
         m_musicalKeysModeColor = cg.readEntry("musicalKeysModeColor", QColor(255, 255, 0, 255));
         m_velocityKeysModeColor = cg.readEntry("velocityKeysModeColor", QColor(0, 255, 255, 255));
@@ -138,7 +138,7 @@ void Theme::processZynthboxSettings(const KSharedConfigPtr &metadata)
         m_stepMutedColor = QColor(128, 0, 0, 255);
         m_stepCurrentColor = QColor(255, 255, 0, 255);
         m_stepRecordingColor = QColor(255, 0, 0, 255);
-        m_sequencerModeColor = QColor(0, 255, 255, 255);
+        m_sequencerModeColor = QColor(255, 0, 0, 255);
         m_trackClipModeColor = QColor(255, 0, 255, 255);
         m_musicalKeysModeColor = QColor(255, 255, 0, 255);
         m_velocityKeysModeColor = QColor(0, 255, 255, 255);
