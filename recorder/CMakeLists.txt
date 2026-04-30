@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2020 Camilo Higuita <milo.h@aol.com>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-
 cmake_minimum_required(VERSION 3.16)
 
 option(BUILD_WITH_QT5 "Use Qt 5" OFF)
@@ -44,7 +43,9 @@ include(KDEClangFormat)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 
-option(QUICK_COMPILER "Use QtQuick compiler to improve performance. QML sources won't be installed in the file system." ON)
+
+project(ZynthboxQmlModule_Rec VERSION 1.0.0 DESCRIPTION "A recorder manager for Zynthbox")
+set(ZB_REC_URI io.zynthbox.rec)
 
 find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS
     Core
@@ -55,27 +56,51 @@ find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS
     Widgets)
 
 find_package(KF${KF_MAJOR_VERSION} ${REQUIRED_KF_VERSION} REQUIRED COMPONENTS
-    CoreAddons
-    Plasma
+    IconThemes
     Config)
- #   find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS Plasma)
- # find_package(Plasma REQUIRED)
-if(QUICK_COMPILER)
-    find_package(Qt5QuickCompiler)
-    set_package_properties(Qt5QuickCompiler PROPERTIES
-        DESCRIPTION "Compile QML at build time"
-        TYPE OPTIONAL)
-endif()
 
-add_compile_definitions(QT_DISABLE_DEPRECATED_UP_TO=0x050F00)
+ecm_add_qml_module(${PROJECT_NAME}
+    VERSION 1.0
+    URI ${ZB_REC_URI}
+    CLASS_NAME RecorderPlugin
+    DEPENDENCIES
+    "QtQuick.Controls"
+    NO_PLUGIN_OPTIONAL)
 
-add_subdirectory(controls)
-add_subdirectory(mpris2)
-add_subdirectory(xtasks)
-# add_subdirectory(recorder)
+target_sources(${PROJECT_NAME}
+    PRIVATE
+    plugin.cpp
+    recorder.cpp
+    recorder.h)
 
-##Clang formatting
-file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
-kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
+add_executable(recorder-test
+    main.cpp)
 
-feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+target_link_libraries(recorder-test
+    PRIVATE
+    ${PROJECT_NAME}
+    Qt${QT_MAJOR_VERSION}::Core
+        KF5::ConfigCore)
+
+target_include_directories(recorder-test
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR})
+
+# ecm_target_qml_sources(ZynthboxQmlModule_MPRIS SOURCES
+#     controls/PlayersView.qml)
+
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+    Qt${QT_MAJOR_VERSION}::Core
+    KF5::ConfigCore
+    KF5::IconThemes
+    PRIVATE
+    Qt${QT_MAJOR_VERSION}::Widgets
+    Qt${QT_MAJOR_VERSION}::QuickControls2)
+
+
+ecm_finalize_qml_module(${PROJECT_NAME}
+    DESTINATION ${KDE_INSTALL_QMLDIR})
+
+ecm_generate_qmltypes(${ZB_REC_URI} 1.0 DESTINATION ${KDE_INSTALL_QMLDIR}/io/zynthbox/rec)
+
