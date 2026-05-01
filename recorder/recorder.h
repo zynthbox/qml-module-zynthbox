@@ -112,6 +112,7 @@ public slots:
     int getPipeWireClientSerialForPid(int pid) const;
     int getPipeWireNodeIdForPid(int pid) const;
     bool isPipeWireClientPid(int pid) const;
+    int getDefaultAudioOutputSinkId() const;
     QString getExecFromDesktopFile(const QString &desktopFilename);
     int getPidFromExecutable(const QString &executableName);
 

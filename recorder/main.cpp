@@ -46,6 +46,9 @@ int main(int argc, char *argv[])
         QStringList() << QStringLiteral("n") << QStringLiteral("node-id-for-pid"),
         QStringLiteral("Print the PipeWire node ID for the given application PID."),
         QStringLiteral("pid"));
+    QCommandLineOption defaultSinkOption(
+        QStringList() << QStringLiteral("S") << QStringLiteral("default-sink"),
+        QStringLiteral("Print the default audio output sink ID."));
     QCommandLineOption pidForDesktopOption(
         QStringList() << QStringLiteral("D") << QStringLiteral("pid-for-desktop"),
         QStringLiteral("Print the process PID for the given .desktop file."),
@@ -72,7 +75,7 @@ int main(int argc, char *argv[])
         QStringLiteral("flac"));
     QCommandLineOption targetOption(
         QStringList() << QStringLiteral("T") << QStringLiteral("target"),
-        QStringLiteral("Optional pw-record target string to override PID target."),
+        QStringLiteral("Optional pw-record target string to override PID target. If omitted, recorder will resolve the correct target automatically."),
         QStringLiteral("target"));
 
     parser.addOptions({
@@ -80,6 +83,7 @@ int main(int argc, char *argv[])
         recordPidOption,
         serialForPidOption,
         nodeIdForPidOption,
+        defaultSinkOption,
         pidForDesktopOption,
         outputFileOption,
         outputDirOption,
@@ -155,6 +159,19 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    if (parser.isSet(defaultSinkOption))
+    {
+        const int sinkId = recorder.getDefaultAudioOutputSinkId();
+        if (sinkId < 0)
+        {
+            qCritical() << "Could not resolve default audio output sink ID.";
+            return 1;
+        }
+
+        qDebug() << "default.sink.id:" << sinkId;
+        return 0;
+    }
+
     if (parser.isSet(serialForPidOption))
     {
         bool ok = false;
@@ -225,17 +242,21 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    if (parser.isSet(recordPidOption))
+    if (parser.isSet(recordPidOption) ||
+        !(parser.isSet(listClientsOption) || parser.isSet(defaultSinkOption) || parser.isSet(serialForPidOption) || parser.isSet(nodeIdForPidOption) || parser.isSet(pidForDesktopOption)))
     {
-        bool ok = false;
-        const int pid = parser.value(recordPidOption).toInt(&ok);
-        if (!ok || pid <= 0)
+        if (parser.isSet(recordPidOption))
         {
-            qCritical() << "Invalid PID provided for --record-pid.";
-            return 1;
-        }
+            bool ok = false;
+            const int pid = parser.value(recordPidOption).toInt(&ok);
+            if (!ok || pid <= 0)
+            {
+                qCritical() << "Invalid PID provided for --record-pid.";
+                return 1;
+            }
 
-        recorder.setPid(pid);
+            recorder.setPid(pid);
+        }
 
         if (parser.isSet(outputFileOption))
         {
@@ -251,7 +272,7 @@ int main(int argc, char *argv[])
         {
             recorder.setTarget(parser.value(targetOption));
         }
-        
+
         recorder.start();
 
         if (!recorder.recording())
@@ -260,7 +281,7 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        qDebug() << "Recording started for PID" << pid
+        qDebug() << "Recording started" << (parser.isSet(recordPidOption) ? QStringLiteral("for PID") + QString::number(recorder.pid()) : QString())
                  << "output=" << recorder.outputDirectory() + (recorder.outputDirectory().isEmpty() ? QString() : QStringLiteral("/")) + recorder.fileName();
 
         if (parser.isSet(durationOption))

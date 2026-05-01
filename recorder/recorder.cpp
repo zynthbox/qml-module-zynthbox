@@ -537,18 +537,31 @@ bool Recorder::startProcess()
     {
         arguments << "--target" << m_target;
     }
-    else if (m_pid > 0)
+    else
     {
-        const int targetSerial = getPipeWireClientSerialForPid(m_pid);
+        int targetSerial = -1;
+        if (m_pid > 0)
+        {
+            targetSerial = getPipeWireClientSerialForPid(m_pid);
+        }
+
         if (targetSerial > 0)
         {
             arguments << "--target=" + QString::number(targetSerial);
         }
         else
         {
-            qWarning() << "Recorder::startProcess(): Could not resolve pipewire client serial for PID" << m_pid
-                       << "using raw PID fallback";
-            arguments << "--target=" + QString::number(m_pid);
+            const int defaultSinkId = getDefaultAudioOutputSinkId();
+            if (defaultSinkId > 0)
+            {
+                arguments << "--target=" + QString::number(defaultSinkId);
+            }
+            else if (m_pid > 0)
+            {
+                qWarning() << "Recorder::startProcess(): Could not resolve pipewire client serial for PID" << m_pid
+                           << "and no default sink ID available; using raw PID fallback";
+                arguments << "--target=" + QString::number(m_pid);
+            }
         }
     }
 
@@ -889,4 +902,41 @@ bool Recorder::isPipeWireClientPid(int pid) const
     }
 
     return false;
+}
+
+int Recorder::getDefaultAudioOutputSinkId() const
+{
+    const QString command = QStringLiteral("wpctl status | grep -A 5 \"Sinks:\" | grep \"*\" | awk '{print $3}' | sed 's/\\.//' ");
+    QProcess process;
+    process.start("sh", QStringList() << "-c" << command);
+    if (!process.waitForFinished(10000))
+    {
+        qWarning() << "Recorder::getDefaultAudioOutputSinkId(): wpctl command did not finish";
+        return -1;
+    }
+
+    const QString output = QString::fromUtf8(process.readAllStandardOutput()).trimmed();
+    if (output.isEmpty())
+    {
+        qWarning() << "Recorder::getDefaultAudioOutputSinkId(): no default sink returned from wpctl";
+        return -1;
+    }
+
+    const QStringList outputLines = output.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+    const QString sinkLine = outputLines.isEmpty() ? QString() : outputLines.first().trimmed();
+    if (sinkLine.isEmpty())
+    {
+        qWarning() << "Recorder::getDefaultAudioOutputSinkId(): no valid sink line found in output";
+        return -1;
+    }
+
+    bool ok = false;
+    const int sinkId = sinkLine.toInt(&ok);
+    if (!ok)
+    {
+        qWarning() << "Recorder::getDefaultAudioOutputSinkId(): failed to parse sink id from output" << sinkLine;
+        return -1;
+    }
+
+    return sinkId;
 }
