@@ -5,6 +5,7 @@
 #include <QProcess>
 #include <QString>
 #include <QVariant>
+#include <QJsonArray>
 #include <QtGlobal>
 #include <KDesktopFile>
 
@@ -115,6 +116,7 @@ public slots:
     int getDefaultAudioOutputSinkId() const;
     QString getExecFromDesktopFile(const QString &desktopFilename);
     int getPidFromExecutable(const QString &executableName);
+    void resetPipeWireClientsJson();
 
 signals:
     void pidChanged();
@@ -151,6 +153,7 @@ private slots:
 
 private:
     bool startProcess();
+    bool ensurePipeWireClientsLoaded() const;
     QProcess *m_process;
     int m_pid;
     QString m_outputDirectory;
@@ -179,6 +182,8 @@ private:
     bool m_raw;
     QString m_forceMidi;
     int m_sampleCount;
+    mutable QJsonArray m_pipeWireClients;
+    mutable bool m_pipeWireClientsLoaded;
 };
 
 #endif // RECORDER_H

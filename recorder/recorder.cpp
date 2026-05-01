@@ -37,10 +37,72 @@ Recorder::Recorder(QObject *parent)
     , m_raw(false)
     , m_forceMidi("ump")
     , m_sampleCount(0)
+    , m_pipeWireClients()
+    , m_pipeWireClientsLoaded(false)
 {
 }
 
 Recorder::~Recorder() = default;
+
+bool Recorder::ensurePipeWireClientsLoaded() const
+{
+    if (m_pipeWireClientsLoaded)
+        return true;
+
+    QProcess pwDump;
+    pwDump.start("pw-dump");
+    if (!pwDump.waitForFinished(10000))
+    {
+        qWarning() << "Recorder::ensurePipeWireClientsLoaded(): pw-dump did not finish";
+        m_pipeWireClientsLoaded = true;
+        return false;
+    }
+
+    const QByteArray output = pwDump.readAllStandardOutput();
+    if (output.isEmpty())
+    {
+        qWarning() << "Recorder::ensurePipeWireClientsLoaded(): pw-dump returned no output";
+        m_pipeWireClientsLoaded = true;
+        return false;
+    }
+
+    QJsonParseError parseError;
+    const QJsonDocument document = QJsonDocument::fromJson(output, &parseError);
+    if (parseError.error != QJsonParseError::NoError)
+    {
+        qWarning() << "Recorder::ensurePipeWireClientsLoaded(): Failed to parse pw-dump JSON:" << parseError.errorString();
+        m_pipeWireClientsLoaded = true;
+        return false;
+    }
+
+    if (!document.isArray())
+    {
+        qWarning() << "Recorder::ensurePipeWireClientsLoaded(): pw-dump output is not a JSON array";
+        m_pipeWireClientsLoaded = true;
+        return false;
+    }
+
+    const QJsonArray rootArray = document.array();
+    for (const QJsonValue &value : rootArray)
+    {
+        if (!value.isObject())
+            continue;
+
+        const QJsonObject obj = value.toObject();
+        if (obj.value("type").toString() == QLatin1String("PipeWire:Interface:Node"))
+            m_pipeWireClients.append(obj);
+    }
+
+    m_pipeWireClientsLoaded = true;
+    return true;
+}
+
+void Recorder::resetPipeWireClientsJson()
+{
+    m_pipeWireClients = QJsonArray();
+    m_pipeWireClientsLoaded = false;
+}
+
 
 int Recorder::pid() const
 {
@@ -518,20 +580,20 @@ bool Recorder::startProcess()
     QString outputPath = m_outputDirectory.isEmpty() ? adjustedFileName : m_outputDirectory + "/" + adjustedFileName;
     QStringList arguments;
 
-    if (m_verbose)
-        arguments << "--verbose";
+    // if (m_verbose)
+    //     arguments << "--verbose";
 
-    if (!m_remote.isEmpty())
-        arguments << "--remote" << m_remote;
+    // if (!m_remote.isEmpty())
+    //     arguments << "--remote" << m_remote;
 
-    if (!m_mediaType.isEmpty())
-        arguments << "--media-type" << m_mediaType;
+    // if (!m_mediaType.isEmpty())
+    //     arguments << "--media-type" << m_mediaType;
 
-    if (!m_mediaCategory.isEmpty())
-        arguments << "--media-category" << m_mediaCategory;
+    // if (!m_mediaCategory.isEmpty())
+    //     arguments << "--media-category" << m_mediaCategory;
 
-    if (!m_mediaRole.isEmpty())
-        arguments << "--media-role" << m_mediaRole;
+    // if (!m_mediaRole.isEmpty())
+    //     arguments << "--media-role" << m_mediaRole;
 
     if (!m_target.isEmpty())
     {
@@ -565,55 +627,55 @@ bool Recorder::startProcess()
         }
     }
 
-    if (!m_latency.isEmpty())
-        arguments << "--latency" << m_latency;
+    // if (!m_latency.isEmpty())
+    //     arguments << "--latency" << m_latency;
 
-    if (!m_properties.isEmpty())
-        arguments << "--properties" << m_properties;
+    // if (!m_properties.isEmpty())
+    //     arguments << "--properties" << m_properties;
 
-    if (m_rate > 0)
-        arguments << "--rate" << QString::number(m_rate);
+    // if (m_rate > 0)
+    //     arguments << "--rate" << QString::number(m_rate);
 
-    if (m_channels > 0)
-        arguments << "--channels" << QString::number(m_channels);
+    // if (m_channels > 0)
+    //     arguments << "--channels" << QString::number(m_channels);
 
-    if (!m_channelMap.isEmpty())
-        arguments << "--channel-map" << m_channelMap;
+    // if (!m_channelMap.isEmpty())
+    //     arguments << "--channel-map" << m_channelMap;
 
-    if (m_listLayouts)
-        arguments << "--list-layouts";
+    // if (m_listLayouts)
+    //     arguments << "--list-layouts";
 
-    if (m_listChannelNames)
-        arguments << "--list-channel-names";
+    // if (m_listChannelNames)
+    //     arguments << "--list-channel-names";
 
-    if (!m_sampleFormat.isEmpty())
-        arguments << "--format" << m_sampleFormat;
+    // if (!m_sampleFormat.isEmpty())
+    //     arguments << "--format" << m_sampleFormat;
 
-    if (m_listFormats)
-        arguments << "--list-formats";
+    // if (m_listFormats)
+    //     arguments << "--list-formats";
 
-    const QString containerOption = !m_container.isEmpty()
-        ? m_container
-        : (m_format == WAV ? QStringLiteral("wav") : QStringLiteral("flac"));
-    arguments << "--container" << containerOption;
+    // const QString containerOption = !m_container.isEmpty()
+    //     ? m_container
+    //     : (m_format == WAV ? QStringLiteral("wav") : QStringLiteral("flac"));
+    // arguments << "--container" << containerOption;
 
-    if (m_listContainers)
-        arguments << "--list-containers";
+    // if (m_listContainers)
+    //     arguments << "--list-containers";
 
-    if (m_volume >= 0.0)
-        arguments << "--volume" << QString::number(m_volume, 'f', 3);
+    // if (m_volume >= 0.0)
+    //     arguments << "--volume" << QString::number(m_volume, 'f', 3);
 
-    if (m_quality >= 0)
-        arguments << "--quality" << QString::number(m_quality);
+    // if (m_quality >= 0)
+    //     arguments << "--quality" << QString::number(m_quality);
 
-    if (m_raw)
-        arguments << "--raw";
+    // if (m_raw)
+    //     arguments << "--raw";
 
-    if (!m_forceMidi.isEmpty())
-        arguments << "--force-midi" << m_forceMidi;
+    // if (!m_forceMidi.isEmpty())
+    //     arguments << "--force-midi" << m_forceMidi;
 
-    if (m_sampleCount > 0)
-        arguments << "--sample-count" << QString::number(m_sampleCount);
+    // if (m_sampleCount > 0)
+    //     arguments << "--sample-count" << QString::number(m_sampleCount);
 
     arguments << outputPath;
 
@@ -713,65 +775,20 @@ int Recorder::getPidFromExecutable(const QString &executableName)
 
 QString Recorder::getPipeWireClientsJson() const
 {
-    QProcess pwDump;
-    pwDump.start("pw-dump", QStringList() << "-R");
-    if (!pwDump.waitForFinished(10000))
-    {
-        qWarning() << "Recorder::getPipeWireClientsJson(): pw-dump did not finish";
+    if (!ensurePipeWireClientsLoaded())
         return QString();
-    }
 
-    const QByteArray output = pwDump.readAllStandardOutput();
-    if (output.isEmpty())
-    {
-        qWarning() << "Recorder::getPipeWireClientsJson(): pw-dump returned no output";
-        return QString();
-    }
-
-    QJsonParseError parseError;
-    const QJsonDocument document = QJsonDocument::fromJson(output, &parseError);
-    if (parseError.error != QJsonParseError::NoError)
-    {
-        qWarning() << "Recorder::getPipeWireClientsJson(): Failed to parse pw-dump JSON:" << parseError.errorString();
-        return QString();
-    }
-
-    if (!document.isArray())
-    {
-        qWarning() << "Recorder::getPipeWireClientsJson(): pw-dump output is not a JSON array";
-        return QString();
-    }
-
-    const QJsonArray rootArray = document.array();
-    QJsonArray clientsArray;
-    for (const QJsonValue &value : rootArray)
-    {
-        if (!value.isObject())
-            continue;
-
-        const QJsonObject obj = value.toObject();
-        if (obj.value("type").toString() == QLatin1String("PipeWire:Interface:Node"))
-            clientsArray.append(obj);
-    }
-
-    return QString::fromUtf8(QJsonDocument(clientsArray).toJson(QJsonDocument::Compact));
+    return QString::fromUtf8(QJsonDocument(m_pipeWireClients).toJson(QJsonDocument::Compact));
 }
 
 QVariantList Recorder::getPipeWireClientsJson(bool asVariantList) const
 {
     Q_UNUSED(asVariantList)
     QVariantList result;
-    const QString clientsJson = getPipeWireClientsJson();
-    if (clientsJson.isEmpty())
+    if (!ensurePipeWireClientsLoaded())
         return result;
 
-    QJsonParseError parseError;
-    const QJsonDocument document = QJsonDocument::fromJson(clientsJson.toUtf8(), &parseError);
-    if (parseError.error != QJsonParseError::NoError || !document.isArray())
-        return result;
-
-    const QJsonArray clientsArray = document.array();
-    for (const QJsonValue &value : clientsArray)
+    for (const QJsonValue &value : m_pipeWireClients)
     {
         if (!value.isObject())
             continue;
@@ -788,17 +805,10 @@ QVariantList Recorder::getPipeWireClientsJson(bool asVariantList) const
 
 int Recorder::getPipeWireClientSerialForPid(int pid) const
 {
-    const QString clientsJson = getPipeWireClientsJson();
-    if (clientsJson.isEmpty())
+    if (!ensurePipeWireClientsLoaded())
         return -1;
 
-    QJsonParseError parseError;
-    const QJsonDocument document = QJsonDocument::fromJson(clientsJson.toUtf8(), &parseError);
-    if (parseError.error != QJsonParseError::NoError || !document.isArray())
-        return -1;
-
-    const QJsonArray clientsArray = document.array();
-    for (const QJsonValue &value : clientsArray)
+    for (const QJsonValue &value : m_pipeWireClients)
     {
         if (!value.isObject())
             continue;
@@ -821,29 +831,18 @@ int Recorder::getPipeWireClientSerialForPid(int pid) const
 
 int Recorder::getPipeWireNodeIdForPid(int pid) const
 {
-    const QString objectsJson = getPipeWireClientsJson();
-    if (objectsJson.isEmpty())
+    if (!ensurePipeWireClientsLoaded())
         return -1;
 
-    QJsonParseError parseError;
-    const QJsonDocument document = QJsonDocument::fromJson(objectsJson.toUtf8(), &parseError);
-    if (parseError.error != QJsonParseError::NoError || !document.isArray())
-    {
-        qWarning() << "Recorder::getPipeWireNodeIdForPid(): Failed to parse pw-dump JSON";
-        return -1;
-    }
-
-    const QJsonArray rootArray = document.array();
     int clientId = -1;
 
     // Find client with matching PID
-    for (const QJsonValue &value : rootArray)
+    for (const QJsonValue &value : m_pipeWireClients)
     {
         if (!value.isObject())
             continue;
 
         const QJsonObject obj = value.toObject();
-
         const QJsonObject info = obj.value("info").toObject();
         const QJsonObject props = info.value("props").toObject();
         const int appPid = props.value("application.process.id").toInt(-1);
@@ -866,26 +865,10 @@ int Recorder::getPipeWireNodeIdForPid(int pid) const
 
 bool Recorder::isPipeWireClientPid(int pid) const
 {
-    const QString clientsJson = getPipeWireClientsJson();
-    if (clientsJson.isEmpty())
+    if (!ensurePipeWireClientsLoaded())
         return false;
 
-    QJsonParseError parseError;
-    const QJsonDocument document = QJsonDocument::fromJson(clientsJson.toUtf8(), &parseError);
-    if (parseError.error != QJsonParseError::NoError)
-    {
-        qWarning() << "Recorder::isPipeWireClientPid(): Failed to parse client JSON:" << parseError.errorString();
-        return false;
-    }
-
-    if (!document.isArray())
-    {
-        qWarning() << "Recorder::isPipeWireClientPid(): client JSON is not an array";
-        return false;
-    }
-
-    const QJsonArray clientsArray = document.array();
-    for (const QJsonValue &value : clientsArray)
+    for (const QJsonValue &value : m_pipeWireClients)
     {
         if (!value.isObject())
             continue;

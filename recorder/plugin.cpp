@@ -14,9 +14,7 @@ public:
     {
         Q_ASSERT(QLatin1String(uri) == QLatin1String("io.zynthbox.rec"));
 
-        qmlRegisterSingletonType<Recorder>(uri, 1, 0, "Recorder", [](QQmlEngine *, QJSEngine *) -> QObject * {
-            return new Recorder();
-        });
+        qmlRegisterType<Recorder>(uri, 1, 0, "Recorder");
 
         // qmlRegisterType<Mpris2Engine>(uri, 1, 0, "Mpris");
         // qmlRegisterUncreatableType<Mpris2Player>(uri, 1, 0, "MprisPlayer",
