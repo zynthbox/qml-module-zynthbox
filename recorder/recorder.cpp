@@ -5,13 +5,14 @@
 #include <KConfigGroup>
 #include <QJsonObject>
 #include <KDesktopFile>
+#include <QDateTime>
 
 Recorder::Recorder(QObject *parent)
     : QObject(parent)
     , m_process(nullptr)
     , m_pid(-1)
     , m_outputDirectory()
-    , m_format(WAV)
+    , m_format(FLAC)
     , m_fileName()
     , m_recording(false)
     , m_verbose(false)
@@ -417,11 +418,15 @@ void Recorder::start()
 
     if (m_fileName.isEmpty())
     {
-        qWarning() << "Recorder::start(): output file name is empty";
-        return;
+        // Generate a random filename with timestamp
+        QString randomName = "recording_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
+        setFileName(randomName);
     }
 
-    startProcess();
+   if (!startProcess())
+    {
+        return;
+    }
     m_recording = true;
     emit recordingChanged();
 }
@@ -455,12 +460,12 @@ void Recorder::restart()
     start();
 }
 
-void Recorder::startProcess()
+bool Recorder::startProcess()
 {
     if (m_process && m_process->state() != QProcess::NotRunning)
     {
         qDebug() << "Recorder::startProcess(): process already running, skipping start";
-        return;
+        return true;
     }
 
     if (!m_process)
@@ -470,7 +475,47 @@ void Recorder::startProcess()
                 this, &Recorder::onProcessFinished);
     }
 
-    QString outputPath = m_outputDirectory.isEmpty() ? m_fileName : m_outputDirectory + "/" + m_fileName;
+    QString adjustedFileName = m_fileName;
+    // Check if filename has a valid suffix
+    if (adjustedFileName.endsWith(QLatin1String(".wav"), Qt::CaseInsensitive))
+    {
+        if (m_format != WAV)
+        {
+            m_format = WAV;
+            emit formatChanged();
+        }
+        // Keep as is
+    }
+    else if (adjustedFileName.endsWith(QLatin1String(".flac"), Qt::CaseInsensitive))
+    {
+        if (m_format != FLAC)
+        {
+            m_format = FLAC;
+            emit formatChanged();
+        }
+        // Keep as is
+    }
+    else if (adjustedFileName.contains(QLatin1Char('.')))
+    {
+        // Has a suffix but not .wav or .flac
+        qWarning() << "Recorder::startProcess(): Invalid file suffix. Only .wav and .flac are supported.";
+        emit recordingError("Invalid file suffix. Only .wav and .flac are supported.");
+        return false;
+    }
+    else
+    {
+        // No suffix, append based on format
+        if (m_format == WAV)
+        {
+            adjustedFileName += QLatin1String(".wav");
+        }
+        else
+        {
+            adjustedFileName += QLatin1String(".flac");
+        }
+    }
+
+    QString outputPath = m_outputDirectory.isEmpty() ? adjustedFileName : m_outputDirectory + "/" + adjustedFileName;
     QStringList arguments;
 
     if (m_verbose)
@@ -572,6 +617,7 @@ void Recorder::startProcess()
         emit pidChanged();
         qDebug() << "Recorder::startProcess(): pw-record started with PID" << m_pid;
     }
+    return true;
 }
 
 void Recorder::onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -595,11 +641,17 @@ void Recorder::onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
 
 QString Recorder::getExecFromDesktopFile(const QString &desktopFilename)
 {
-    KDesktopFile desktopFile(desktopFilename);
+    QString actualFilename = desktopFilename;
+    if (!actualFilename.endsWith(QLatin1String(".desktop"), Qt::CaseInsensitive))
+    {
+        actualFilename += QLatin1String(".desktop");
+    }
+
+    KDesktopFile desktopFile(actualFilename);
     
     if (!desktopFile.desktopGroup().hasKey("Exec"))
     {
-        qWarning() << "Recorder::getExecFromDesktopFile(): No Exec key found in" << desktopFilename;
+        qWarning() << "Recorder::getExecFromDesktopFile(): No Exec key found in" << actualFilename;
         return QString();
     }
     
@@ -685,7 +737,7 @@ QString Recorder::getPipeWireClientsJson() const
             continue;
 
         const QJsonObject obj = value.toObject();
-        if (obj.value("type").toString() == QLatin1String("PipeWire:Interface:Client"))
+        if (obj.value("type").toString() == QLatin1String("PipeWire:Interface:Node"))
             clientsArray.append(obj);
     }
 
@@ -752,6 +804,51 @@ int Recorder::getPipeWireClientSerialForPid(int pid) const
     }
 
     return -1;
+}
+
+int Recorder::getPipeWireNodeIdForPid(int pid) const
+{
+    const QString objectsJson = getPipeWireClientsJson();
+    if (objectsJson.isEmpty())
+        return -1;
+
+    QJsonParseError parseError;
+    const QJsonDocument document = QJsonDocument::fromJson(objectsJson.toUtf8(), &parseError);
+    if (parseError.error != QJsonParseError::NoError || !document.isArray())
+    {
+        qWarning() << "Recorder::getPipeWireNodeIdForPid(): Failed to parse pw-dump JSON";
+        return -1;
+    }
+
+    const QJsonArray rootArray = document.array();
+    int clientId = -1;
+
+    // Find client with matching PID
+    for (const QJsonValue &value : rootArray)
+    {
+        if (!value.isObject())
+            continue;
+
+        const QJsonObject obj = value.toObject();
+
+        const QJsonObject info = obj.value("info").toObject();
+        const QJsonObject props = info.value("props").toObject();
+        const int appPid = props.value("application.process.id").toInt(-1);
+        const int secPid = props.value("pipewire.sec.pid").toInt(-1);
+        if (appPid == pid || secPid == pid)
+        {
+            clientId = obj.value("id").toInt(-1);
+            break;
+        }
+    }
+
+    if (clientId == -1)
+    {
+        qWarning() << "Recorder::getPipeWireNodeIdForPid(): No client found for PID" << pid;
+        return -1;
+    }
+
+    return clientId;
 }
 
 bool Recorder::isPipeWireClientPid(int pid) const

@@ -4,8 +4,21 @@
 #include <QJsonDocument>
 #include <QTimer>
 #include <QDebug>
+#include <csignal>
 
 #include "recorder.h"
+
+static Recorder *g_recorder = nullptr;
+static QCoreApplication *g_app = nullptr;
+
+void signalHandler(int sig)
+{
+    Q_UNUSED(sig)
+    if (g_app)
+    {
+        g_app->quit();
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -28,6 +41,10 @@ int main(int argc, char *argv[])
     QCommandLineOption serialForPidOption(
         QStringList() << QStringLiteral("s") << QStringLiteral("serial-for-pid"),
         QStringLiteral("Print the PipeWire object serial for the given application PID."),
+        QStringLiteral("pid"));
+    QCommandLineOption nodeIdForPidOption(
+        QStringList() << QStringLiteral("n") << QStringLiteral("node-id-for-pid"),
+        QStringLiteral("Print the PipeWire node ID for the given application PID."),
         QStringLiteral("pid"));
     QCommandLineOption pidForDesktopOption(
         QStringList() << QStringLiteral("D") << QStringLiteral("pid-for-desktop"),
@@ -52,7 +69,7 @@ int main(int argc, char *argv[])
         QStringList() << QStringLiteral("f") << QStringLiteral("format"),
         QStringLiteral("Output format: wav or flac."),
         QStringLiteral("format"),
-        QStringLiteral("wav"));
+        QStringLiteral("flac"));
     QCommandLineOption targetOption(
         QStringList() << QStringLiteral("T") << QStringLiteral("target"),
         QStringLiteral("Optional pw-record target string to override PID target."),
@@ -62,6 +79,7 @@ int main(int argc, char *argv[])
         listClientsOption,
         recordPidOption,
         serialForPidOption,
+        nodeIdForPidOption,
         pidForDesktopOption,
         outputFileOption,
         outputDirOption,
@@ -75,6 +93,27 @@ int main(int argc, char *argv[])
 
     Recorder recorder;
 
+    QObject::connect(&recorder, &Recorder::recordingError, [&](const QString &error)
+    {
+        qCritical() << "Recording error:" << error;
+        app.quit();
+    });
+
+    g_recorder = &recorder;
+    g_app = &app;
+
+    // Stop recording when the application is about to quit
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, [&recorder]() {
+        if (recorder.recording())
+        {
+            recorder.stop();
+        }
+    });
+
+    // Install signal handlers for graceful shutdown
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
+
     if (parser.isSet(verboseOption))
     {
         recorder.setVerbose(true);
@@ -86,13 +125,13 @@ int main(int argc, char *argv[])
     }
 
     const QString formatValue = parser.value(formatOption).toLower();
-    if (formatValue == QLatin1String("flac"))
+    if (formatValue == QLatin1String("wav"))
     {
-        recorder.setFormat(Recorder::FLAC);
+        recorder.setFormat(Recorder::WAV);
     }
     else
     {
-        recorder.setFormat(Recorder::WAV);
+        recorder.setFormat(Recorder::FLAC);
     }
 
     if (parser.isSet(listClientsOption))
@@ -137,6 +176,27 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    if (parser.isSet(nodeIdForPidOption))
+    {
+        bool ok = false;
+        const int pid = parser.value(nodeIdForPidOption).toInt(&ok);
+        if (!ok || pid <= 0)
+        {
+            qCritical() << "Invalid PID provided for --node-id-for-pid.";
+            return 1;
+        }
+
+        const int nodeId = recorder.getPipeWireNodeIdForPid(pid);
+        if (nodeId <= 0)
+        {
+            qCritical() << "Could not resolve PipeWire node ID for PID" << pid;
+            return 1;
+        }
+
+        qDebug() << "node.id:" << nodeId;
+        return 0;
+    }
+
     if (parser.isSet(pidForDesktopOption))
     {
         const QString desktopFile = parser.value(pidForDesktopOption);
@@ -175,14 +235,12 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        if (!parser.isSet(outputFileOption))
-        {
-            qCritical() << "The --output option is required when recording.";
-            return 1;
-        }
-
         recorder.setPid(pid);
-        recorder.setFileName(parser.value(outputFileOption));
+
+        if (parser.isSet(outputFileOption))
+        {
+            recorder.setFileName(parser.value(outputFileOption));
+        }
 
         if (parser.isSet(outputDirOption))
         {
@@ -193,13 +251,7 @@ int main(int argc, char *argv[])
         {
             recorder.setTarget(parser.value(targetOption));
         }
-
-        QObject::connect(&recorder, &Recorder::recordingError, [&](const QString &error)
-        {
-            qCritical() << "Recording error:" << error;
-            app.quit();
-        });
-
+        
         recorder.start();
 
         if (!recorder.recording())
@@ -229,6 +281,6 @@ int main(int argc, char *argv[])
         return app.exec();
     }
 
-    parser.showHelp();
+    parser.showHelp(1);
     return 0;
 }

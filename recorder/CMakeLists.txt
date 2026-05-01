@@ -49,15 +49,19 @@ set(ZB_REC_URI io.zynthbox.rec)
 
 find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS
     Core
+    DBus
     Qml
     Quick
     QuickControls2
     Svg
     Widgets)
 
+find_package(Qt5 REQUIRED COMPONENTS X11Extras)
+
 find_package(KF${KF_MAJOR_VERSION} ${REQUIRED_KF_VERSION} REQUIRED COMPONENTS
     IconThemes
-    Config)
+    Config
+    WindowSystem)
 
 ecm_add_qml_module(${PROJECT_NAME}
     VERSION 1.0
@@ -80,7 +84,11 @@ target_link_libraries(recorder-test
     PRIVATE
     ${PROJECT_NAME}
     Qt${QT_MAJOR_VERSION}::Core
-        KF5::ConfigCore)
+    Qt${QT_MAJOR_VERSION}::DBus
+    Qt5::X11Extras
+    KF5::ConfigCore
+    KF5::IconThemes
+    KF5::WindowSystem)
 
 target_include_directories(recorder-test
     PRIVATE
@@ -92,8 +100,11 @@ target_include_directories(recorder-test
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
     Qt${QT_MAJOR_VERSION}::Core
+    Qt${QT_MAJOR_VERSION}::DBus
+    Qt5::X11Extras
     KF5::ConfigCore
     KF5::IconThemes
+    KF5::WindowSystem
     PRIVATE
     Qt${QT_MAJOR_VERSION}::Widgets
     Qt${QT_MAJOR_VERSION}::QuickControls2)

@@ -5,9 +5,10 @@
 #include <QProcess>
 #include <QString>
 #include <QVariant>
+#include <QtGlobal>
 #include <KDesktopFile>
 
-class Recorder : public QObject
+class Q_DECL_EXPORT Recorder : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int pid READ pid WRITE setPid NOTIFY pidChanged)
@@ -109,6 +110,7 @@ public slots:
     QString getPipeWireClientsJson() const;
     QVariantList getPipeWireClientsJson(bool asVariantList) const;
     int getPipeWireClientSerialForPid(int pid) const;
+    int getPipeWireNodeIdForPid(int pid) const;
     bool isPipeWireClientPid(int pid) const;
     QString getExecFromDesktopFile(const QString &desktopFilename);
     int getPidFromExecutable(const QString &executableName);
@@ -147,7 +149,7 @@ private slots:
     void onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
-    void startProcess();
+    bool startProcess();
     QProcess *m_process;
     int m_pid;
     QString m_outputDirectory;
