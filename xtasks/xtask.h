@@ -11,6 +11,7 @@ class XTask : public QObject
     Q_OBJECT
     Q_PROPERTY(WindowsModel *windowsModel READ windowsModel CONSTANT)
     Q_PROPERTY(QString activeWindow READ activeWindow NOTIFY activeWindowChanged)
+    Q_PROPERTY(int activeWindowPid READ activeWindowPid NOTIFY activeWindowPidChanged)
 
 public:
     explicit XTask(QObject *parent = nullptr);
@@ -29,12 +30,13 @@ public slots:
     void minimizeActiveWindow();
 
     WindowsModel *windowsModel();
-
-    private:
-    WindowsModel *m_windowsModel = nullptr;   
-
     QString activeWindow();
+    int activeWindowPid() const;
 
-    signals:
+signals:
     void activeWindowChanged();
+    void activeWindowPidChanged();
+
+private:
+    WindowsModel *m_windowsModel = nullptr;
 };
