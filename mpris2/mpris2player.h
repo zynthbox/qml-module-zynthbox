@@ -33,6 +33,7 @@ class Mpris2Player : public QObject
     Q_PROPERTY(qreal rate READ rate NOTIFY rateChanged)
     Q_PROPERTY(qreal minimumRate READ minimumRate NOTIFY minimumRateChanged)
     Q_PROPERTY(qreal maximumRate READ maximumRate NOTIFY maximumRateChanged)
+    Q_PROPERTY(int pid READ pid NOTIFY pidChanged)
     Q_PROPERTY(QString serviceName READ serviceName NOTIFY serviceNameChanged)
 
 public:
@@ -56,7 +57,9 @@ public:
     Mpris2Player(const QString &service, QObject *parent = 0);
     QDBusObjectPath trackId() const;
 
-	QString serviceName() const;
+int pid() const;
+
+    QString serviceName() const;
 
     QString identity() const;
     QString iconName() const;
@@ -89,6 +92,7 @@ Q_SIGNALS:
     void minimumRateChanged();
     void maximumRateChanged();
     void volumeChanged();
+    void pidChanged();
     void initialFetchFailed();
     void initialFetchFinished();
 
@@ -139,8 +143,10 @@ private:
     qreal m_minimumRate;
     qreal m_maximumRate;
     qreal m_volume;
+    int m_pid;
 
     void retrieveData();
+    void fetchPid();
 
     void setCapabilities(Capabilities cap);
     void setMetadata(const Metadata &map);

@@ -40,7 +40,15 @@ Item {
         id: _mpris
     }
 
+    function currentPlayer() {
+        if (_listView.currentIndex < 0)
+            return null;
+
+        return _listView.currentItem.player;
+    }
+
     ListView {
+        id: _listView
         anchors.fill: parent
         orientation: ListView.Horizontal
         interactive: true
@@ -212,6 +220,13 @@ Item {
                         anchors.centerIn: parent
                         source: _card.albumArt
                     }
+
+                     Text {
+                            anchors.bottom: parent.bottom
+                            width: parent.width
+                            text: _card.player.pid + " / " + _card.player.serviceName
+                            color: "red"
+                        }
 
                 }
 

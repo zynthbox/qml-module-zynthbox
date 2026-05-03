@@ -1,5 +1,6 @@
 #include "recorder.h"
 #include <QDebug>
+#include <QDir>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <KConfigGroup>
@@ -158,6 +159,17 @@ void Recorder::setFileName(const QString &fileName)
 
     m_fileName = fileName;
     emit fileNameChanged();
+}
+
+QString Recorder::getRecordedFilePath() const
+{
+    if (m_fileName.isEmpty())
+        return QString();
+
+    if (m_outputDirectory.isEmpty())
+        return m_fileName;
+
+    return QDir(m_outputDirectory).filePath(m_fileName);
 }
 
 bool Recorder::verbose() const

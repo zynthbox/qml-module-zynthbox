@@ -116,6 +116,7 @@ public slots:
     int getDefaultAudioOutputSinkId() const;
     QString getExecFromDesktopFile(const QString &desktopFilename);
     int getPidFromExecutable(const QString &executableName);
+    QString getRecordedFilePath() const;
     void resetPipeWireClientsJson();
 
 signals:

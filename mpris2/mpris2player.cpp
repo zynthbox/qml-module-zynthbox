@@ -10,6 +10,8 @@
 #include <QtCore/QUrl>
 #include <QtCore/QSettings>
 #include <QtDBus/QDBusArgument>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
 #include <QtDBus/QDBusMetaType>
 
 #include "mpris2player.h"
@@ -127,6 +129,7 @@ Mpris2Player::Mpris2Player(const QString &service, QObject *parent)
     , m_minimumRate(0)
     , m_maximumRate(0)
     , m_volume(0)
+    , m_pid(-1)
 {
     qRegisterMetaType<Mpris2Player::Capabilities>("Mpris2Player::Capabilities");
 
@@ -158,6 +161,7 @@ Mpris2Player::Mpris2Player(const QString &service, QObject *parent)
 
     // Retrieve data
     retrieveData();
+    fetchPid();
 }
 
 QString Mpris2Player::serviceName() const
@@ -320,6 +324,36 @@ void Mpris2Player::calculatePosition()
     qint64 diff = m_lastPosUpdate.msecsTo(QDateTime::currentDateTimeUtc()) * 1000;
     m_position = m_position + static_cast<qint64>(diff - m_rate);
     Q_EMIT positionChanged();
+}
+
+void Mpris2Player::fetchPid()
+{
+    if (m_pid >= 0)
+        return;
+
+    QDBusInterface dbusInterface(QStringLiteral("org.freedesktop.DBus"),
+                                 QStringLiteral("/org/freedesktop/DBus"),
+                                 QStringLiteral("org.freedesktop.DBus"),
+                                 QDBusConnection::sessionBus(),
+                                 this);
+    QDBusReply<quint32> reply = dbusInterface.call(QStringLiteral("GetConnectionUnixProcessID"), m_serviceName);
+    if (!reply.isValid()) {
+        qCWarning(MPRIS2_PLAYER) << "Failed to fetch PID for" << m_serviceName << ":" << reply.error().name() << reply.error().message();
+        return;
+    }
+
+    int pid = static_cast<int>(reply.value());
+    if (m_pid != pid) {
+        m_pid = pid;
+        Q_EMIT pidChanged();
+    }
+}
+
+int Mpris2Player::pid() const
+{
+    if (m_pid < 0)
+        const_cast<Mpris2Player *>(this)->fetchPid();
+    return m_pid;
 }
 
 void Mpris2Player::propertiesFinished(QDBusPendingCallWatcher *watcher)
