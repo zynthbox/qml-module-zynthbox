@@ -8,6 +8,10 @@
 #include <QJsonArray>
 #include <QtGlobal>
 #include <KDesktopFile>
+#include <QTimer>
+#include <QSet>
+
+static const QString DEFAULT_OUTPUT_DIRECTORY = "/zynthian/zynthian-my-data/samples/my-samples/";
 
 class Q_DECL_EXPORT Recorder : public QObject
 {
@@ -39,6 +43,7 @@ class Q_DECL_EXPORT Recorder : public QObject
     Q_PROPERTY(bool raw READ raw WRITE setRaw NOTIFY rawChanged)
     Q_PROPERTY(QString forceMidi READ forceMidi WRITE setForceMidi NOTIFY forceMidiChanged)
     Q_PROPERTY(int sampleCount READ sampleCount WRITE setSampleCount NOTIFY sampleCountChanged)
+    Q_PROPERTY(bool isValid READ isValid NOTIFY isValidChanged)
 
 public:
     enum Format {
@@ -103,6 +108,7 @@ public:
     void setForceMidi(const QString &forceMidi);
     int sampleCount() const;
     void setSampleCount(int sampleCount);
+    bool isValid() const;
 
 public slots:
     void start();
@@ -117,7 +123,11 @@ public slots:
     QString getExecFromDesktopFile(const QString &desktopFilename);
     int getPidFromExecutable(const QString &executableName);
     QString getRecordedFilePath() const;
+    QString getPwRecordVersion() const;
+    QString getPwDumpVersion() const;
     void resetPipeWireClientsJson();
+    void startPipeWireMonitoring(int intervalMs = 2000);
+    void stopPipeWireMonitoring();
 
 signals:
     void pidChanged();
@@ -147,15 +157,24 @@ signals:
     void rawChanged();
     void forceMidiChanged();
     void sampleCountChanged();
+    void isValidChanged();
     void recordingError(const QString &error);
+    void newPipeWireNodeDetected(int nodeId, const QString &nodeName);
+    void newPipeWireClientDetected(int clientId, const QString &clientName);
 
 private slots:
     void onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    void onPipeWireMonitorTimer();
 
 private:
     bool startProcess();
     bool ensurePipeWireClientsLoaded() const;
+    bool compareVersions(const QString &version, const QString &target) const;
+    void updatePipeWireObjectsFromPwTop();
     QProcess *m_process;
+    QTimer *m_pwTopTimer;
+    QSet<int> m_knownNodeIds;
+    QSet<int> m_knownClientIds;
     int m_pid;
     QString m_outputDirectory;
     Format m_format;

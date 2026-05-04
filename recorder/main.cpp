@@ -53,6 +53,16 @@ int main(int argc, char *argv[])
         QStringList() << QStringLiteral("D") << QStringLiteral("pid-for-desktop"),
         QStringLiteral("Print the process PID for the given .desktop file."),
         QStringLiteral("desktop-file"));
+    QCommandLineOption isValidPidOption(
+        QStringList() << QStringLiteral("c") << QStringLiteral("check-pid"),
+        QStringLiteral("Check if the given PID is a valid PipeWire client."),
+        QStringLiteral("pid"));
+    QCommandLineOption pwRecordVersionOption(
+        QStringList() << QStringLiteral("V") << QStringLiteral("pw-record-version"),
+        QStringLiteral("Print the version of pw-record."));
+    QCommandLineOption pwDumpVersionOption(
+        QStringList() << QStringLiteral("W") << QStringLiteral("pw-dump-version"),
+        QStringLiteral("Print the version of pw-dump."));
     QCommandLineOption outputFileOption(
         QStringList() << QStringLiteral("o") << QStringLiteral("output"),
         QStringLiteral("Output file name."),
@@ -85,6 +95,9 @@ int main(int argc, char *argv[])
         nodeIdForPidOption,
         defaultSinkOption,
         pidForDesktopOption,
+        isValidPidOption,
+        pwRecordVersionOption,
+        pwDumpVersionOption,
         outputFileOption,
         outputDirOption,
         durationOption,
@@ -242,8 +255,49 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    if (parser.isSet(isValidPidOption))
+    {
+        bool ok = false;
+        const int pid = parser.value(isValidPidOption).toInt(&ok);
+        if (!ok || pid <= 0)
+        {
+            qCritical() << "Invalid PID provided for --check-pid.";
+            return 1;
+        }
+
+        const bool isValid = recorder.isPipeWireClientPid(pid);
+        qDebug() << "is_valid:" << (isValid ? "true" : "false");
+        return 0;
+    }
+
+    if (parser.isSet(pwRecordVersionOption))
+    {
+        const QString version = recorder.getPwRecordVersion();
+        if (version.isEmpty())
+        {
+            qCritical() << "Could not get pw-record version.";
+            return 1;
+        }
+
+        qDebug() << "pw-record.version:" << version;
+        return 0;
+    }
+
+    if (parser.isSet(pwDumpVersionOption))
+    {
+        const QString version = recorder.getPwDumpVersion();
+        if (version.isEmpty())
+        {
+            qCritical() << "Could not get pw-dump version.";
+            return 1;
+        }
+
+        qDebug() << "pw-dump.version:" << version;
+        return 0;
+    }
+
     if (parser.isSet(recordPidOption) ||
-        !(parser.isSet(listClientsOption) || parser.isSet(defaultSinkOption) || parser.isSet(serialForPidOption) || parser.isSet(nodeIdForPidOption) || parser.isSet(pidForDesktopOption)))
+        !(parser.isSet(listClientsOption) || parser.isSet(defaultSinkOption) || parser.isSet(serialForPidOption) || parser.isSet(nodeIdForPidOption) || parser.isSet(pidForDesktopOption) || parser.isSet(isValidPidOption) || parser.isSet(pwRecordVersionOption) || parser.isSet(pwDumpVersionOption)))
     {
         if (parser.isSet(recordPidOption))
         {

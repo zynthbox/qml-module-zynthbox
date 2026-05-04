@@ -7,13 +7,15 @@
 #include <QJsonObject>
 #include <KDesktopFile>
 #include <QDateTime>
+#include <QRegularExpression>
 
 Recorder::Recorder(QObject *parent)
     : QObject(parent)
     , m_process(nullptr)
+    , m_pwTopTimer(nullptr)
     , m_pid(-1)
-    , m_outputDirectory()
-    , m_format(FLAC)
+    , m_outputDirectory(DEFAULT_OUTPUT_DIRECTORY)
+    , m_format(WAV)
     , m_fileName()
     , m_recording(false)
     , m_verbose(false)
@@ -41,9 +43,128 @@ Recorder::Recorder(QObject *parent)
     , m_pipeWireClients()
     , m_pipeWireClientsLoaded(false)
 {
+    // startPipeWireMonitoring(5000);
 }
 
-Recorder::~Recorder() = default;
+Recorder::~Recorder()
+{
+    // stopPipeWireMonitoring();
+}
+
+void Recorder::startPipeWireMonitoring(int intervalMs)
+{
+    if (m_pwTopTimer)
+    {
+        qDebug() << "Recorder::startPipeWireMonitoring(): Monitoring already running";
+        return;
+    }
+
+    m_pwTopTimer = new QTimer(this);
+    connect(m_pwTopTimer, &QTimer::timeout, this, &Recorder::onPipeWireMonitorTimer);
+    m_pwTopTimer->start(intervalMs);
+    qDebug() << "Recorder::startPipeWireMonitoring(): PipeWire monitoring started with interval" << intervalMs << "ms";
+    
+    // Do an initial check
+    onPipeWireMonitorTimer();
+}
+
+void Recorder::stopPipeWireMonitoring()
+{
+    if (!m_pwTopTimer)
+    {
+        qDebug() << "Recorder::stopPipeWireMonitoring(): Monitoring not running";
+        return;
+    }
+
+    m_pwTopTimer->stop();
+    m_pwTopTimer->deleteLater();
+    m_pwTopTimer = nullptr;
+    m_knownNodeIds.clear();
+    m_knownClientIds.clear();
+    qDebug() << "Recorder::stopPipeWireMonitoring(): PipeWire monitoring stopped";
+}
+
+void Recorder::onPipeWireMonitorTimer()
+{
+    updatePipeWireObjectsFromPwTop();
+}
+
+void Recorder::updatePipeWireObjectsFromPwTop()
+{
+    QProcess pwTopProcess;
+    pwTopProcess.start("pw-top", QStringList() << "-b" << "-n" << "1");
+    
+    if (!pwTopProcess.waitForFinished(5000))
+    {
+        qWarning() << "Recorder::updatePipeWireObjectsFromPwTop(): pw-top did not finish";
+        return;
+    }
+
+    const QString output = QString::fromUtf8(pwTopProcess.readAllStandardOutput());
+    
+    if (output.isEmpty())
+    {
+        qWarning() << "Recorder::updatePipeWireObjectsFromPwTop(): pw-top returned no output";
+        return;
+    }
+
+    // Parse pw-top output to extract node IDs and client names
+    // pw-top output format includes lines like:
+    // ID  name
+    // 39  pipewire
+    // 42  ALSA plug-in
+    // etc.
+    
+    QStringList lines = output.split('\n', Qt::SkipEmptyParts);
+    
+    for (const QString &line : lines)
+    {
+        // Skip header lines and empty lines
+        if (line.contains("ID") || line.isEmpty() || !line[0].isDigit())
+            continue;
+
+        QStringList parts = line.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+        if (parts.size() < 2)
+            continue;
+
+        bool ok = false;
+        int objectId = parts[0].toInt(&ok);
+        if (!ok)
+            continue;
+
+        QString objectName = parts.size() > 1 ? parts.mid(1).join(' ') : QString();
+        
+        // Check if this is a new node (nodes usually have higher IDs)
+        if (!m_knownNodeIds.contains(objectId))
+        {
+            m_knownNodeIds.insert(objectId);
+            qDebug() << "Recorder::updatePipeWireObjectsFromPwTop(): New node detected - ID:" << objectId << "Name:" << objectName;
+            emit newPipeWireNodeDetected(objectId, objectName);
+            emit isValidChanged();
+        }
+    }
+}
+
+bool Recorder::compareVersions(const QString &version, const QString &target) const
+{
+    // Parse versions into components (e.g., "1.2.3" -> [1, 2, 3])
+    QStringList versionParts = version.split('.');
+    QStringList targetParts = target.split('.');
+    
+    // Compare each component
+    for (int i = 0; i < qMax(versionParts.size(), targetParts.size()); ++i)
+    {
+        int versionNum = i < versionParts.size() ? versionParts[i].toInt() : 0;
+        int targetNum = i < targetParts.size() ? targetParts[i].toInt() : 0;
+        
+        if (versionNum > targetNum)
+            return true;
+        else if (versionNum < targetNum)
+            return false;
+    }
+    
+    return false; // versions are equal
+}
 
 bool Recorder::ensurePipeWireClientsLoaded() const
 {
@@ -51,7 +172,17 @@ bool Recorder::ensurePipeWireClientsLoaded() const
         return true;
 
     QProcess pwDump;
-    pwDump.start("pw-dump");
+    QStringList arguments;
+    
+    // Check pw-dump version and add "-R" flag if version > 1.6.0
+    const QString pwDumpVersion = getPwDumpVersion();
+    if (!pwDumpVersion.isEmpty() && compareVersions(pwDumpVersion, "1.6.0"))
+    {
+        qDebug() << "Recorder::ensurePipeWireClientsLoaded(): pw-dump version" << pwDumpVersion << "is greater than 1.6.0, adding -R flag";
+        arguments << "-R";
+    }
+    
+    pwDump.start("pw-dump", arguments);
     if (!pwDump.waitForFinished(10000))
     {
         qWarning() << "Recorder::ensurePipeWireClientsLoaded(): pw-dump did not finish";
@@ -102,6 +233,7 @@ void Recorder::resetPipeWireClientsJson()
 {
     m_pipeWireClients = QJsonArray();
     m_pipeWireClientsLoaded = false;
+    emit isValidChanged();
 }
 
 
@@ -117,6 +249,7 @@ void Recorder::setPid(int pid)
 
     m_pid = pid;
     emit pidChanged();
+    emit isValidChanged();
 }
 
 QString Recorder::outputDirectory() const
@@ -480,6 +613,11 @@ void Recorder::setSampleCount(int sampleCount)
     emit sampleCountChanged();
 }
 
+bool Recorder::isValid() const
+{
+    return m_pid != -1 && isPipeWireClientPid(m_pid);
+}
+
 bool Recorder::recording() const
 {
     return m_recording;
@@ -785,6 +923,98 @@ int Recorder::getPidFromExecutable(const QString &executableName)
     return pid;
 }
 
+QString Recorder::getPwRecordVersion() const
+{
+    QProcess pwRecordProcess;
+    pwRecordProcess.start("pw-record", QStringList() << "--version");
+    
+    if (!pwRecordProcess.waitForFinished())
+    {
+        qWarning() << "Recorder::getPwRecordVersion(): Failed to execute pw-record --version";
+        return QString();
+    }
+    
+    QString output = QString::fromUtf8(pwRecordProcess.readAllStandardOutput()).trimmed();
+    QString errorOutput = QString::fromUtf8(pwRecordProcess.readAllStandardError()).trimmed();
+    
+    QString fullOutput;
+    if (!output.isEmpty())
+    {
+        fullOutput = output;
+    }
+    else if (!errorOutput.isEmpty())
+    {
+        fullOutput = errorOutput;
+    }
+    else
+    {
+        qWarning() << "Recorder::getPwRecordVersion(): No output from pw-record --version";
+        return QString();
+    }
+    
+    // Use regex to extract version number (e.g., "1.2.3")
+    QRegularExpression versionRegex("\\d+(?:\\.\\d+)+");
+    QRegularExpressionMatch match = versionRegex.match(fullOutput);
+    
+    if (match.hasMatch())
+    {
+        QString version = match.captured(0);
+        qDebug() << "Recorder::getPwRecordVersion(): Extracted version:" << version << "from output:" << fullOutput;
+        return version;
+    }
+    else
+    {
+        qDebug() << "Recorder::getPwRecordVersion(): No version pattern found, returning full output:" << fullOutput;
+        return fullOutput;
+    }
+}
+
+QString Recorder::getPwDumpVersion() const
+{
+    QProcess pwDumpProcess;
+    pwDumpProcess.start("pw-dump", QStringList() << "--version");
+    
+    if (!pwDumpProcess.waitForFinished())
+    {
+        qWarning() << "Recorder::getPwDumpVersion(): Failed to execute pw-dump --version";
+        return QString();
+    }
+    
+    QString output = QString::fromUtf8(pwDumpProcess.readAllStandardOutput()).trimmed();
+    QString errorOutput = QString::fromUtf8(pwDumpProcess.readAllStandardError()).trimmed();
+    
+    QString fullOutput;
+    if (!output.isEmpty())
+    {
+        fullOutput = output;
+    }
+    else if (!errorOutput.isEmpty())
+    {
+        fullOutput = errorOutput;
+    }
+    else
+    {
+        qWarning() << "Recorder::getPwDumpVersion(): No output from pw-dump --version";
+        return QString();
+    }
+    
+    // Use regex to extract version number (e.g., "1.2.3")
+    QRegularExpression versionRegex("\\d+(?:\\.\\d+)+");
+    QRegularExpressionMatch match = versionRegex.match(fullOutput);
+    
+    if (match.hasMatch())
+    {
+        QString version = match.captured(0);
+        qDebug() << "Recorder::getPwDumpVersion(): Extracted version:" << version << "from output:" << fullOutput;
+        return version;
+    }
+    else
+    {
+        qDebug() << "Recorder::getPwDumpVersion(): No version pattern found, returning full output:" << fullOutput;
+        return fullOutput;
+    }
+}
+
 QString Recorder::getPipeWireClientsJson() const
 {
     if (!ensurePipeWireClientsLoaded())
@@ -877,15 +1107,55 @@ int Recorder::getPipeWireNodeIdForPid(int pid) const
 
 bool Recorder::isPipeWireClientPid(int pid) const
 {
-    if (!ensurePipeWireClientsLoaded())
+    QProcess pwDump;
+    QStringList arguments;
+    
+    // Check pw-dump version and add "-R" flag if version > 1.6.0
+    const QString pwDumpVersion = getPwDumpVersion();
+    if (!pwDumpVersion.isEmpty() && compareVersions(pwDumpVersion, "1.6.0"))
+    {
+        qDebug() << "Recorder::isPipeWireClientPid(): pw-dump version" << pwDumpVersion << "is greater than 1.6.0, adding -R flag for PID" << pid;
+        arguments << "-R";
+    }
+    
+    pwDump.start("pw-dump", arguments);
+    if (!pwDump.waitForFinished(10000))
+    {
+        qWarning() << "Recorder::isPipeWireClientPid(): pw-dump did not finish for PID" << pid;
         return false;
+    }
 
-    for (const QJsonValue &value : m_pipeWireClients)
+    const QByteArray output = pwDump.readAllStandardOutput();
+    if (output.isEmpty())
+    {
+        qWarning() << "Recorder::isPipeWireClientPid(): pw-dump returned no output for PID" << pid;
+        return false;
+    }
+
+    QJsonParseError parseError;
+    const QJsonDocument document = QJsonDocument::fromJson(output, &parseError);
+    if (parseError.error != QJsonParseError::NoError)
+    {
+        qWarning() << "Recorder::isPipeWireClientPid(): Failed to parse pw-dump JSON for PID" << pid << ":" << parseError.errorString();
+        return false;
+    }
+
+    if (!document.isArray())
+    {
+        qWarning() << "Recorder::isPipeWireClientPid(): pw-dump output is not a JSON array for PID" << pid;
+        return false;
+    }
+
+    const QJsonArray rootArray = document.array();
+    for (const QJsonValue &value : rootArray)
     {
         if (!value.isObject())
             continue;
 
         const QJsonObject obj = value.toObject();
+        if (obj.value("type").toString() != QLatin1String("PipeWire:Interface:Client"))
+            continue;
+
         const QJsonObject info = obj.value("info").toObject();
         const QJsonObject props = info.value("props").toObject();
 

@@ -36,6 +36,10 @@ import org.kde.kirigami 2.6 as Kirigami
 Item {
     id: control
 
+    readonly property alias count   : _listView.count
+    readonly property alias players : _mpris.players
+    readonly property QtObject currentPlayer: _listView.currentItem ? _listView.currentItem.player : null
+
     MPRIS.Mpris {
         id: _mpris
     }
@@ -104,6 +108,7 @@ Item {
             readonly property bool canGoNext: (_card.player && _card.player.capabilities & MPRIS.MprisPlayer.CanGoNext) || false
             readonly property bool canPlay: _card.player ? (_card.player.capabilities & MPRIS.MprisPlayer.CanPlay) : false
             readonly property bool canPause: _card.player ? (_card.player.capabilities & MPRIS.MprisPlayer.CanPause) : false
+            readonly property bool canStop: _card.player ? (_card.player.capabilities & MPRIS.MprisPlayer.CanStop) : false
             property double position: (_card.player && _card.player.position) || 0
             readonly property real rate: (_card.player && _card.player.rate) || 1
             readonly property int length: currentMetadata ? currentMetadata["mpris:length"] || 0 : 0
@@ -206,6 +211,7 @@ Item {
             }
 
             contentItem: RowLayout {
+                spacing: Kirigami.Units.gridUnit * 4
                 Item {
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 500
@@ -213,20 +219,70 @@ Item {
                     // Layout.fillWidth: true
                     Layout.fillHeight: true
 
-                    Image {
+                    Kirigami.Icon {
                         width: parent.width
-                        sourceSize.width: width
-                        fillMode: Image.PreserveAspectFit
-                        anchors.centerIn: parent
-                        source: _card.albumArt
+                        height: parent.height
+                        source: "applications-multimedia"
+                        visible: _img.status == Image.Error || _card.albumArt === ""
                     }
 
-                     Text {
-                            anchors.bottom: parent.bottom
-                            width: parent.width
-                            text: _card.player.pid + " / " + _card.player.serviceName
-                            color: "red"
+                    Item {
+                        anchors.centerIn: parent
+                        height: _img.paintedHeight
+                        width: parent.width
+
+                        layer.enabled: true
+                        layer.effect: OpacityMask {
+                            maskSource: Rectangle {
+                                width: _img.paintedWidth
+                                height: _img.paintedHeight
+                                radius: _card.isPlaying ? width / 2 : 6
+                                color: "white"
+                                Behavior on radius {
+                                    NumberAnimation {
+                                        duration: 150
+                                        easing.type: Easing.OutInQuad
+                                    }
+                                }
+
+                            }
                         }
+
+                        RotationAnimation {
+                            target: _img
+                            property: "rotation"
+                            from: 0
+                            to: 360
+                            duration: 3000
+                            loops: Animation.Infinite
+                            running: _card.isPlaying
+                            easing.type: Easing.Linear
+                            onStopped: _img.rotation = 0
+                        }
+
+                        Image {
+                            id: _img
+                            width: parent.width
+                            sourceSize.width: width
+                            fillMode: Image.PreserveAspectFit
+                            anchors.centerIn: parent
+                            source: _card.albumArt
+                            layer.effect: DropShadow {
+                                color: "black"
+                                radius: 8
+                                samples: 16
+                                horizontalOffset: 0
+                                verticalOffset: 4
+                            }
+                        }
+                    }
+
+                    //  Text {
+                    //         anchors.bottom: parent.bottom
+                    //         width: parent.width
+                    //         text: _card.player.pid + " / " + _card.player.serviceName
+                    //         color: "red"
+                    //     }
 
                 }
 
@@ -235,22 +291,24 @@ Item {
                     Layout.fillHeight: true
 
                     Column {
-                        anchors.centerIn: parent
+                        width: parent.width
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: ZUI.Theme.sectionSpacing
 
                         QQC2.Label {
                             text: _card.track
+                            font.pointSize: 20
+                            font.bold: true
                         }
 
                         QQC2.Label {
                             text: _card.artist
+                            font.pointSize: 16
                         }
 
                         QQC2.Label {
                             text: _card.playerName
-                        }
-
-                        QQC2.Label {
-                            text: _card.position
+                            font.pointSize: 12
                         }
 
                         QQC2.Slider {
@@ -283,37 +341,61 @@ Item {
                             }
 
                         }
-
-                        Row {
-                            spacing: ZUI.Theme.spacing
+                        
+                        ZUI.SectionGroup {
                             Layout.alignment: Qt.AlignHCenter
+                            implicitWidth: _buttonsRow.implicitWidth + leftPadding + rightPadding
+                            implicitHeight: _buttonsRow.implicitHeight + topPadding + bottomPadding
 
-                            QQC2.ToolButton {
-                                icon.name: "media-skip-backward"
-                                enabled: _card.canGoPrevious
-                                onClicked: {
-                                    seekSlider.value = 0; // Let the media start from beginning. Bug 362473
-                                    _card.action_previous();
+
+                            Row {
+                                id: _buttonsRow
+                                spacing: ZUI.Theme.spacing
+                                anchors.fill: parent
+                                
+                                ZUI.SectionButton{
+                                    icon.name: "media-skip-backward"
+                                    implicitWidth:  Kirigami.Units.gridUnit * 4
+                                    implicitHeight: Kirigami.Units.gridUnit * 2
+                                    enabled: _card.canGoPrevious
+                                    onClicked: {
+                                        seekSlider.value = 0; // Let the media start from beginning. Bug 362473
+                                        _card.action_previous();
+                                    }
                                 }
-                            }
 
-                            QQC2.ToolButton {
-                                //                        text: qsTr("Play and pause")
-                                enabled: _card.canPlay
-                                icon.name: _card.isPlaying ? "media-playback-pause" : "media-playback-start"
-                                onClicked: _card.togglePlaying()
-                            }
-
-                            QQC2.ToolButton {
-                                icon.name: "media-skip-forward"
-                                enabled: _card.canGoNext
-                                onClicked: {
-                                    seekSlider.value = 0; // Let the media start from beginning. Bug 362473
-                                    _card.action_next();
+                                ZUI.SectionButton {
+                                    //                        text: qsTr("Stop")
+                                    enabled: _card.canStop
+                                    implicitWidth:  Kirigami.Units.gridUnit * 4
+                                    implicitHeight: Kirigami.Units.gridUnit * 2
+                                    icon.name: "media-playback-stop"
+                                    onClicked: _card.action_stop()
                                 }
+
+                                ZUI.SectionButton {
+                                    //                        text: qsTr("Play and pause")
+                                    enabled: _card.canPlay
+                                    implicitWidth:  Kirigami.Units.gridUnit * 4
+                                    implicitHeight: Kirigami.Units.gridUnit * 2
+                                    icon.name: _card.isPlaying ? "media-playback-pause" : "media-playback-start"
+                                    onClicked: _card.togglePlaying()
+                                }
+
+                                ZUI.SectionButton {
+                                    icon.name: "media-skip-forward"
+                                    implicitWidth:  Kirigami.Units.gridUnit * 4
+                                    implicitHeight: Kirigami.Units.gridUnit * 2
+                                    enabled: _card.canGoNext
+                                    onClicked: {
+                                        seekSlider.value = 0; // Let the media start from beginning. Bug 362473
+                                        _card.action_next();
+                                    }
+                                }
+
                             }
 
-                        }
+                    }
 
                     }
 

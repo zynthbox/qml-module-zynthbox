@@ -550,12 +550,19 @@ void Mpris2Player::copyProperty(const QString &name, const QVariant &value,
             Q_EMIT identityChanged();
         }
     } else if (name == QStringLiteral("DesktopEntry")) {
-        KDesktopFile file(value.toString() +".desktop");
-        QString iconName = file.readIcon();
-        if (!iconName.isEmpty()) {
-            m_iconName = iconName;
-            Q_EMIT iconNameChanged();
+        
+
+        if(KDesktopFile::isDesktopFile(value.toString() +".desktop")) {
+            KDesktopFile file(value.toString() +".desktop");
+            QString iconName = file.readIcon();
+            if (!iconName.isEmpty()) {
+                m_iconName = iconName;
+            }
+        }else {
+            m_iconName = m_identity.toLower().replace(QLatin1Char(' '), QLatin1Char('-'));
         }
+        Q_EMIT iconNameChanged();
+
     } else if (name == QStringLiteral("Fullscreen")) {
         if (m_fullScreen != value.toBool()) {
             m_fullScreen = value.toBool();
