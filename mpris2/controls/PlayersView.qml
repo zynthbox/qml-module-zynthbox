@@ -32,6 +32,8 @@ import QtQuick.Layouts 1.4
 import io.zynthbox.mpris 1.0 as MPRIS
 import io.zynthbox.ui 1.0 as ZUI
 import org.kde.kirigami 2.6 as Kirigami
+import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick.Particles 2.15
 
 Item {
     id: control
@@ -39,7 +41,8 @@ Item {
     readonly property alias count   : _listView.count
     readonly property alias players : _mpris.players
     readonly property QtObject currentPlayer: _listView.currentItem ? _listView.currentItem.player : null
-
+    signal recordClicked(int pid)
+    property bool isRecording: false
     MPRIS.Mpris {
         id: _mpris
     }
@@ -53,6 +56,7 @@ Item {
 
     ListView {
         id: _listView
+        clip: true
         anchors.fill: parent
         orientation: ListView.Horizontal
         interactive: true
@@ -66,6 +70,7 @@ Item {
             id: _card
 
             property MPRIS.MprisPlayer player: model.player
+            readonly property bool isCurrent: ListView.isCurrentItem
             readonly property bool isPlaying: state === "Playing"
             property string state: player ? player.status : ""
             readonly property var currentMetadata: player ? player.metadata : undefined
@@ -211,70 +216,184 @@ Item {
             }
 
             contentItem: RowLayout {
-                spacing: Kirigami.Units.gridUnit * 4
+                spacing: ZUI.Theme.sectionSpacing
                 Item {
                     Layout.minimumWidth: 100
                     Layout.maximumWidth: 500
                     Layout.preferredWidth: 250
                     // Layout.fillWidth: true
                     Layout.fillHeight: true
+                    Layout.margins: Kirigami.Units.gridUnit
 
-                    Kirigami.Icon {
-                        width: parent.width
-                        height: parent.height
-                        source: "applications-multimedia"
-                        visible: _img.status == Image.Error || _card.albumArt === ""
-                    }
+                    ColumnLayout {
+                        anchors.fill: parent
+                        spacing: ZUI.Theme.sectionSpacing
 
-                    Item {
-                        anchors.centerIn: parent
-                        height: _img.paintedHeight
-                        width: parent.width
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
 
-                        layer.enabled: true
-                        layer.effect: OpacityMask {
-                            maskSource: Rectangle {
-                                width: _img.paintedWidth
-                                height: _img.paintedHeight
-                                radius: _card.isPlaying ? width / 2 : 6
-                                color: "white"
-                                Behavior on radius {
+                            Item {
+                                anchors.fill: parent
+                                visible:  control.isRecording && _card.isPlaying && _card.isCurrent
+                                opacity: visible ? 1 : 0
+                                Behavior on opacity {
                                     NumberAnimation {
-                                        duration: 150
-                                        easing.type: Easing.OutInQuad
+                                        duration: 250
+                                        easing.type: Easing.InOutQuad
                                     }
                                 }
 
+                                ParticleSystem {
+                                    id: sys
+
+                                    running: parent.visible
+                                }
+
+                                Emitter {
+                                    id: emitter
+
+                                    anchors.centerIn: parent
+                                    system: sys
+                                    emitRate: 120 // Particles per second
+                                    lifeSpan: 2000 // Lasts 2 seconds
+                                    lifeSpanVariation: 500
+                                    size: 200
+                                    sizeVariation: 40
+
+                                    velocity: AngleDirection {
+                                        angleVariation: 360
+                                        magnitude: 15
+                                    }
+
+                                    // velocity: TargetDirection {
+                                    //     targetItem: _targetRecord
+                                    //     magnitude: control.isRecording ? 200 : 100 // Speed of particles
+                                    // }
+
+                                }
+
+                                ImageParticle {
+                                    system: sys
+                                    source: "qrc:///particleresources/glowdot.png" // Uses default Qt resource
+                                    color: Qt.lighter("#e500a4", 2)
+                                    redVariation: 0 // Becomes more "white" as red and green increase
+                                    greenVariation: 0.5
+                                    blueVariation: 0.2 // Keeps some blue dominance
+                                }
+                            }
+
+                            // Attractor {
+                            //     system: sys
+                            //     pointX: _targetRecord.x + _targetRecord.width/2
+                            //     pointY: _targetRecord.y + _targetRecord.height/2
+                            //     strength: 1.0  // Attraction force
+                            //     affectedParameter: Attractor.Position // Directly moves the particle coordinate
+                            //     proportionalToDistance: Attractor.Constant // Uniform pull strength
+                            // }
+
+                            Rectangle {
+                                id: _recordArt
+                                anchors.centerIn: parent
+                                height: 200
+                                width: 200 
+                                color: "white"
+                                radius: _card.isPlaying ? width / 2 : 6
+                                Behavior on radius {
+                                            NumberAnimation {
+                                                duration: 150
+                                                easing.type: Easing.OutInQuad
+                                            }
+                                        }
+
+
+
+                                layer.effect: DropShadow {
+                                    color: "black"
+                                    radius: 8
+                                    samples: 16
+                                    horizontalOffset: 0
+                                    verticalOffset: 4
+                                }
+
+                                RotationAnimation {
+                                    target: _img
+                                    property: "rotation"
+                                    from: 0
+                                    to: 360
+                                    duration: 3000
+                                    loops: Animation.Infinite
+                                    running: _card.isPlaying
+                                    easing.type: Easing.Linear
+                                    onStopped: _img.rotation = 0
+                                }
+
+                                Image {
+                                    id: _img
+                                    width: parent.width -10
+                                    sourceSize.width: width
+                                    fillMode: Image.PreserveAspectFit
+                                    anchors.centerIn: parent
+                                    source: _card.albumArt
+                                    layer.enabled: true
+                                    layer.effect: OpacityMask {
+                                        maskSource: Rectangle {
+                                            width: _img.paintedWidth
+                                            height: _img.paintedHeight
+                                            radius: _card.isPlaying ? width / 2 : 6
+                                            color: "white"
+                                            Behavior on radius {
+                                                NumberAnimation {
+                                                    duration: 150
+                                                    easing.type: Easing.OutInQuad
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Rectangle {
+                            //     id: _targetRecord
+
+                            //     width: 64
+                            //     height: 64
+                            //     anchors.horizontalCenter: _recordArt.right
+                            //     anchors.verticalCenter: _recordArt.bottom
+                                
+                            //     radius: 32
+                            //     color: "white"
+                            //     layer.effect: DropShadow {
+                            //         color: "black"
+                            //         radius: 8           
+                            //         samples: 16
+                            //         horizontalOffset: 0
+                            //         verticalOffset: 4
+                            //     }
+
+                            //     RotationAnimation {
+                            //         target: _targetRecord
+                            //         property: "rotation"
+                            //         from: 0
+                            //         to: 360
+                            //         duration: 3000
+                            //         loops: Animation.Infinite
+                            //         running: _card.isPlaying && control.isRecording
+                            //         easing.type: Easing.Linear
+                            //         onStopped: _targetRecord.rotation = 0
+                            //     }
+                            // }
+
+                            Kirigami.Icon {
+                                width: 64
+                                height: 64
+                                anchors.horizontalCenter: _recordArt.right
+                                anchors.verticalCenter: _recordArt.bottom
+                                source: _card.playerIcon
                             }
                         }
 
-                        RotationAnimation {
-                            target: _img
-                            property: "rotation"
-                            from: 0
-                            to: 360
-                            duration: 3000
-                            loops: Animation.Infinite
-                            running: _card.isPlaying
-                            easing.type: Easing.Linear
-                            onStopped: _img.rotation = 0
-                        }
-
-                        Image {
-                            id: _img
-                            width: parent.width
-                            sourceSize.width: width
-                            fillMode: Image.PreserveAspectFit
-                            anchors.centerIn: parent
-                            source: _card.albumArt
-                            layer.effect: DropShadow {
-                                color: "black"
-                                radius: 8
-                                samples: 16
-                                horizontalOffset: 0
-                                verticalOffset: 4
-                            }
-                        }
+                        
                     }
 
                     //  Text {
@@ -344,19 +463,26 @@ Item {
                         
                         ZUI.SectionGroup {
                             Layout.alignment: Qt.AlignHCenter
-                            implicitWidth: _buttonsRow.implicitWidth + leftPadding + rightPadding
-                            implicitHeight: _buttonsRow.implicitHeight + topPadding + bottomPadding
+                            implicitWidth: (Kirigami.Units.gridUnit * 4) * 4
+                            implicitHeight: (Kirigami.Units.gridUnit * 2) * 2
+                            // implicitWidth: _buttonsRow.implicitWidth + leftPadding + rightPadding
+                            // implicitHeight: _buttonsRow.implicitHeight + topPadding + bottomPadding
 
 
-                            Row {
+                            GridLayout {
                                 id: _buttonsRow
-                                spacing: ZUI.Theme.spacing
+                                rowSpacing: ZUI.Theme.spacing
+                                columnSpacing: ZUI.Theme.spacing
                                 anchors.fill: parent
+                                rows: 2
+                                columns: 4
                                 
                                 ZUI.SectionButton{
+                                    Layout.row: 0
+                                    Layout.column: 0
                                     icon.name: "media-skip-backward"
-                                    implicitWidth:  Kirigami.Units.gridUnit * 4
-                                    implicitHeight: Kirigami.Units.gridUnit * 2
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
                                     enabled: _card.canGoPrevious
                                     onClicked: {
                                         seekSlider.value = 0; // Let the media start from beginning. Bug 362473
@@ -365,32 +491,49 @@ Item {
                                 }
 
                                 ZUI.SectionButton {
-                                    //                        text: qsTr("Stop")
+                                    Layout.row: 0
+                                    Layout.column: 1
                                     enabled: _card.canStop
-                                    implicitWidth:  Kirigami.Units.gridUnit * 4
-                                    implicitHeight: Kirigami.Units.gridUnit * 2
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
                                     icon.name: "media-playback-stop"
                                     onClicked: _card.action_stop()
                                 }
 
                                 ZUI.SectionButton {
+                                    Layout.row: 0
+                                    Layout.column: 2
                                     //                        text: qsTr("Play and pause")
                                     enabled: _card.canPlay
-                                    implicitWidth:  Kirigami.Units.gridUnit * 4
-                                    implicitHeight: Kirigami.Units.gridUnit * 2
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
                                     icon.name: _card.isPlaying ? "media-playback-pause" : "media-playback-start"
                                     onClicked: _card.togglePlaying()
                                 }
 
                                 ZUI.SectionButton {
+                                    Layout.row: 0
+                                    Layout.column: 3
                                     icon.name: "media-skip-forward"
-                                    implicitWidth:  Kirigami.Units.gridUnit * 4
-                                    implicitHeight: Kirigami.Units.gridUnit * 2
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
                                     enabled: _card.canGoNext
                                     onClicked: {
                                         seekSlider.value = 0; // Let the media start from beginning. Bug 362473
                                         _card.action_next();
                                     }
+                                }
+
+                                ZUI.SectionButton {
+                                    id: _recordButton
+                                    Layout.row: 1
+                                    Layout.column: 0
+                                    Layout.columnSpan: 4
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
+                                    text: control.isRecording ? "Stop Recording" : "Record"
+                                    
+                                    onClicked: control.recordClicked(_card.player.pid)
                                 }
 
                             }
