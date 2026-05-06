@@ -1,4 +1,5 @@
 #include "windowsmodel.h"
+#include "xtask.h"
 #include <KWindowSystem/KWindowSystem>
 #include <KWindowSystem/KWindowInfo>
 #include <KWindowSystem/KX11Extras>
@@ -84,6 +85,21 @@ void WindowsModel::refresh(WId id)
     beginResetModel();
     emit countChanged();
     endResetModel();
+
+    bool hasOtherWindows = false;
+    for (WId winId : KX11Extras::windows()) {
+        KWindowInfo info(winId, NET::WMState, NET::WM2WindowClass);
+        if (info.windowClassName() != QByteArrayLiteral("zynthian_qt_gui.py")) {
+            hasOtherWindows = true;
+            break;
+        }
+    }
+
+    if (hasOtherWindows) {
+        XTask::startPipeWirePulseService();
+    } else {
+        XTask::stopPipeWirePulseService();
+    }
 }
 
 static QIcon iconFor(WId id)

@@ -33,6 +33,9 @@ public slots:
     QString activeWindow();
     int activeWindowPid() const;
 
+    static void startPipeWirePulseService();
+    static void stopPipeWirePulseService();
+
 signals:
     void activeWindowChanged();
     void activeWindowPidChanged();

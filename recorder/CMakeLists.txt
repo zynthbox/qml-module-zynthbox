@@ -58,6 +58,12 @@ find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS
 
 find_package(Qt5 REQUIRED COMPONENTS X11Extras)
 
+find_program(PW_DUMP_EXECUTABLE pw-dump REQUIRED)
+message(STATUS "Found pw-dump: ${PW_DUMP_EXECUTABLE}")
+
+find_program(PW_RECORD_EXECUTABLE pw-record REQUIRED)
+message(STATUS "Found pw-record: ${PW_RECORD_EXECUTABLE}")
+
 find_package(KF${KF_MAJOR_VERSION} ${REQUIRED_KF_VERSION} REQUIRED COMPONENTS
     IconThemes
     Config

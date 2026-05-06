@@ -2,9 +2,10 @@
 #include "windowsmodel.h"
 #include <KWindowSystem/KX11Extras>
 #include <KWindowSystem/KWindowInfo>
-#include <KWindowSystem/KWindowSystem>  
+#include <KWindowSystem/KWindowSystem>
 #include <NETWM>
 #include <QX11Info>
+#include <QProcess>
 
 XTask::XTask(QObject *parent) : QObject(parent)
 {
@@ -116,4 +117,14 @@ int XTask::activeWindowPid() const
         return -1;
 
     return info.pid();
+}
+
+void XTask::startPipeWirePulseService()
+{
+    QProcess::startDetached(QStringLiteral("systemctl"), {QStringLiteral("--user"), QStringLiteral("start"), QStringLiteral("pipewire-pulse.service")});
+}
+
+void XTask::stopPipeWirePulseService()
+{
+    QProcess::startDetached(QStringLiteral("systemctl"), {QStringLiteral("--user"), QStringLiteral("stop"), QStringLiteral("pipewire-pulse.service")});
 }
