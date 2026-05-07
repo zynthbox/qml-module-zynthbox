@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QRect>
 #include <QString>
 
 
@@ -12,6 +13,7 @@ class XTask : public QObject
     Q_PROPERTY(WindowsModel *windowsModel READ windowsModel CONSTANT)
     Q_PROPERTY(QString activeWindow READ activeWindow NOTIFY activeWindowChanged)
     Q_PROPERTY(int activeWindowPid READ activeWindowPid NOTIFY activeWindowPidChanged)
+    Q_PROPERTY(QString activeWindowId READ activeWindowId NOTIFY activeWindowChanged)
 
 public:
     explicit XTask(QObject *parent = nullptr);
@@ -28,9 +30,11 @@ public slots:
     void show(const QString &windowId);
     void hide(const QString &windowId);
     void minimizeActiveWindow();
+    void setWindowGeometry(const QString &windowId, const QRect &geometry);
 
     WindowsModel *windowsModel();
     QString activeWindow();
+    QString activeWindowId();
     int activeWindowPid() const;
 
     static void startPipeWirePulseService();

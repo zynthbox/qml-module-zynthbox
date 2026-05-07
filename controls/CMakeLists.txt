@@ -112,7 +112,7 @@ target_link_libraries(ZynthboxQmlModule
     KF${KF_MAJOR_VERSION}::CoreAddons
     KF${KF_MAJOR_VERSION}::ConfigCore
     PRIVATE
-     KF5::Plasma
+    KF5::Plasma
     Qt${QT_MAJOR_VERSION}::Qml
     Qt${QT_MAJOR_VERSION}::Svg
     Qt${QT_MAJOR_VERSION}::Widgets

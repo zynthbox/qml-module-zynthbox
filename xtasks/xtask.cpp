@@ -6,6 +6,7 @@
 #include <NETWM>
 #include <QX11Info>
 #include <QProcess>
+#include <QRect>
 
 XTask::XTask(QObject *parent) : QObject(parent)
 {
@@ -106,6 +107,14 @@ QString XTask::activeWindow()
     return QString();
 }
 
+QString XTask::activeWindowId()
+{
+    WId activeWinId = KX11Extras::activeWindow();
+    if (activeWinId)
+        return QString::number(activeWinId);
+    return QString();
+}
+
 int XTask::activeWindowPid() const
 {
     WId activeWinId = KX11Extras::activeWindow();
@@ -117,6 +126,33 @@ int XTask::activeWindowPid() const
         return -1;
 
     return info.pid();
+}
+
+void XTask::setWindowGeometry(const QString &windowId, const QRect &geometry)
+{
+    WId winId = windowId.toULongLong();
+    KWindowInfo info(winId, NET::WMState | NET::WMGeometry);
+    if (!info.valid())
+        return;
+
+    // Unmaximize first — a maximized window ignores move/resize requests.
+    if (info.hasState(NET::MaxHoriz) || info.hasState(NET::MaxVert)) {
+        NETWinInfo winInfo(QX11Info::connection(), winId,
+                           QX11Info::appRootWindow(), NET::WMState, NET::Properties2());
+        winInfo.setState(NET::States(), NET::MaxHoriz | NET::MaxVert);
+    }
+
+    // _NET_MOVERESIZE_WINDOW flags:
+    //   bits  8-11 : gravity (5 = StaticGravity — position relative to root)
+    //   bit  12    : x present
+    //   bit  13    : y present
+    //   bit  14    : width present
+    //   bit  15    : height present
+    const int flags = (5 << 8) | (1 << 12) | (1 << 13) | (1 << 14) | (1 << 15);
+    NETRootInfo ri(QX11Info::connection(), NET::Properties(), NET::WM2MoveResizeWindow);
+    ri.moveResizeWindowRequest(winId, flags,
+                               geometry.x(), geometry.y(),
+                               geometry.width(), geometry.height());
 }
 
 void XTask::startPipeWirePulseService()
