@@ -1,48 +1,6 @@
 # SPDX-FileCopyrightText: 2020 Camilo Higuita <milo.h@aol.com>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
-cmake_minimum_required(VERSION 3.16)
-
-option(BUILD_WITH_QT5 "Use Qt 5" OFF)
-option(BUILD_WITH_QT6 "Use Qt 6" OFF)
-
-set(QT_MAJOR_VERSION 5)
-set(KF_MAJOR_VERSION 5)
-
-set(REQUIRED_QT_VERSION 5.15.2)
-set(REQUIRED_KF_VERSION 5.95.0)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-set(ZB_URI io.zynthbox.ui)
-
-set(AUTOMOC_MOC_OPTIONS -Muri=${ZB_URI})
-
-project(zynthbox-qml-module VERSION 1.0)
-
-find_package(ECM ${REQUIRED_KF_VERSION} NO_MODULE)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
-
-#DEFAULT COMPONENTS DEFINITIONS
-include(GenerateExportHeader)
-include(CMakePackageConfigHelpers)
-
-include(ECMSetupVersion)
-include(ECMGenerateHeaders)
-include(ECMFindQmlModule)
-include(ECMQmlModule)
-include(ECMGenerateQmlTypes)
-include(ECMSourceVersionControl)
-
-include(KDEClangFormat)
-include(KDEInstallDirs)
-include(KDECMakeSettings)
-
 
 project(ZynthboxQmlModule_Rec VERSION 1.0.0 DESCRIPTION "A recorder manager for Zynthbox")
 set(ZB_REC_URI io.zynthbox.rec)

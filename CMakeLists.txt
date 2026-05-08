@@ -73,6 +73,7 @@ add_subdirectory(controls)
 add_subdirectory(mpris2)
 add_subdirectory(xtasks)
 add_subdirectory(recorder)
+add_subdirectory(webmidi)
 
 ##Clang formatting
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)

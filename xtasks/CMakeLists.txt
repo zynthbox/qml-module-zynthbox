@@ -9,6 +9,8 @@ find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS
     DBus
     X11Extras)
 
+find_package(XCB REQUIRED COMPONENTS XCB)
+
 find_package(KF${KF_MAJOR_VERSION} ${REQUIRED_KF_VERSION} REQUIRED COMPONENTS
     WindowSystem
     IconThemes)
@@ -42,7 +44,8 @@ target_link_libraries(${PROJECT_NAME}
     KF5::IconThemes
     PRIVATE
     Qt${QT_MAJOR_VERSION}::Widgets
-    Qt${QT_MAJOR_VERSION}::QuickControls2)
+    Qt${QT_MAJOR_VERSION}::QuickControls2
+    XCB::XCB)
 
 
 ecm_finalize_qml_module(${PROJECT_NAME}

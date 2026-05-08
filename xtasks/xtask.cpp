@@ -7,6 +7,7 @@
 #include <QX11Info>
 #include <QProcess>
 #include <QRect>
+#include <xcb/xcb.h>
 
 XTask::XTask(QObject *parent) : QObject(parent)
 {
@@ -142,17 +143,22 @@ void XTask::setWindowGeometry(const QString &windowId, const QRect &geometry)
         winInfo.setState(NET::States(), NET::MaxHoriz | NET::MaxVert);
     }
 
-    // _NET_MOVERESIZE_WINDOW flags:
-    //   bits  8-11 : gravity (5 = StaticGravity — position relative to root)
-    //   bit  12    : x present
-    //   bit  13    : y present
-    //   bit  14    : width present
-    //   bit  15    : height present
-    const int flags = (5 << 8) | (1 << 12) | (1 << 13) | (1 << 14) | (1 << 15);
-    NETRootInfo ri(QX11Info::connection(), NET::Properties(), NET::WM2MoveResizeWindow);
-    ri.moveResizeWindowRequest(winId, flags,
-                               geometry.x(), geometry.y(),
-                               geometry.width(), geometry.height());
+    // Use xcb_configure_window directly — it bypasses WM size hints and EWMH
+    // message routing, so both position and size are applied unconditionally.
+    const uint32_t mask = XCB_CONFIG_WINDOW_X      |
+                          XCB_CONFIG_WINDOW_Y      |
+                          XCB_CONFIG_WINDOW_WIDTH  |
+                          XCB_CONFIG_WINDOW_HEIGHT;
+    const uint32_t values[] = {
+        static_cast<uint32_t>(geometry.x()),
+        static_cast<uint32_t>(geometry.y()),
+        static_cast<uint32_t>(geometry.width()),
+        static_cast<uint32_t>(geometry.height())
+    };
+    xcb_configure_window(QX11Info::connection(),
+                         static_cast<xcb_window_t>(winId),
+                         mask, values);
+    xcb_flush(QX11Info::connection());
 }
 
 void XTask::startPipeWirePulseService()

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/audiocontrol-viewer">
+        <file>jzz_webchannel.js</file>
+        <file>jzz.js</file>
+        <file>qwebchannel.js</file>
+        <file>WebView.qml</file>
+    </qresource>
+</RCC>
