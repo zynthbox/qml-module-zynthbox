@@ -5,6 +5,7 @@
 #include <QtQml/QtQml>
 
 #include "MidiTransport.h"
+#include "CommandRunner.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -100,6 +101,7 @@ public:
         qmlRegisterSingletonType<MidiTransport>(uri, 1, 0, "MidiTransport", [](QQmlEngine *, QJSEngine *) -> QObject * {
             return new MidiTransport();
         });
+        qmlRegisterType<CommandRunner>(uri, 1, 0, "CommandRunner");
     }
 };
 

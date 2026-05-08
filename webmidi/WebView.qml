@@ -9,6 +9,13 @@ Item {
 
     property alias url: _view.url
     property alias loading: _view.loading
+    property alias canGoBack: _view.canGoBack
+
+    function reload() { _view.reload() }
+    function goBack() { _view.goBack() }
+    function clear() { _view.stop(); _view.url = "about:blank" }
+    
+    
       // ── WebChannel owns the transport ─────────────────────────────────────────
     WebChannel {
         id: _channel

@@ -66,6 +66,8 @@ target_sources(${PROJECT_NAME}
     plugin.cpp
     MidiTransport.cpp
     MidiTransport.h
+    CommandRunner.cpp
+    CommandRunner.h
     app.qrc)
 
 # add_executable(webmidi-test
