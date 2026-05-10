@@ -5,7 +5,7 @@ import QtWebChannel 1.0
 import io.zynthbox.webmidi 1.0 
 
 Item {
-    id: root  
+    id: root
 
     property alias url: _view.url
     property alias loading: _view.loading
@@ -14,6 +14,18 @@ Item {
     function reload() { _view.reload() }
     function goBack() { _view.goBack() }
     function clear() { _view.stop(); _view.url = "about:blank" }
+
+    // Forward all key events to the web view so arrow keys, Enter, Escape etc.
+    // work inside popup menus and other interactive page elements.
+    Keys.forwardTo: [_view]
+
+    // Grab focus whenever the item becomes visible or is clicked.
+    onVisibleChanged: { if (visible) _view.forceActiveFocus() }
+    MouseArea {
+        anchors.fill: parent
+        propagateComposedEvents: true
+        onPressed: function(mouse) { _view.forceActiveFocus(); mouse.accepted = false }
+    }
     
     
       // ── WebChannel owns the transport ─────────────────────────────────────────
@@ -26,7 +38,7 @@ Item {
     WebEngineView {
         id: _view
         anchors.fill: parent
-        url: "https://audiocontrol.org/roland/s330/editor"
+        url: ""
 
         webChannel: _channel
 
@@ -47,6 +59,7 @@ Item {
 
         onLoadingChanged: {
             if (loadRequest.status === WebEngineView.LoadSucceededStatus) {
+                _view.forceActiveFocus();
                 var m = _view.url.toString().match(/^(https?:\/\/[^/]+)/);
                 var origin = m ? m[1] : _view.url.toString();
                 Qt.callLater(function() {
