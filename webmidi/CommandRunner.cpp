@@ -35,6 +35,13 @@ void CommandRunner::setWorkingDirectory(const QString &dir)
     Q_EMIT workingDirectoryChanged();
 }
 
+void CommandRunner::setEnvironment(const QStringList &env)
+{
+    if (m_environment == env) return;
+    m_environment = env;
+    Q_EMIT environmentChanged();
+}
+
 void CommandRunner::setSuccessPattern(const QString &pattern)
 {
     if (m_successPattern == pattern) return;
@@ -55,6 +62,15 @@ void CommandRunner::run()
     m_process->setProcessChannelMode(QProcess::MergedChannels);
     if (!m_workingDirectory.isEmpty())
         m_process->setWorkingDirectory(m_workingDirectory);
+    if (!m_environment.isEmpty()) {
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        for (const QString &entry : m_environment) {
+            const int eq = entry.indexOf('=');
+            if (eq > 0)
+                env.insert(entry.left(eq), entry.mid(eq + 1));
+        }
+        m_process->setProcessEnvironment(env);
+    }
 
     connect(m_process, &QProcess::readyRead, this, &CommandRunner::onReadyRead);
     connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),

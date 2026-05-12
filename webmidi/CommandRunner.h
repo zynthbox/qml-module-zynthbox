@@ -42,6 +42,7 @@ class CommandRunner : public QObject
     Q_PROPERTY(QString     command          READ command          WRITE setCommand          NOTIFY commandChanged)
     Q_PROPERTY(QStringList arguments        READ arguments        WRITE setArguments        NOTIFY argumentsChanged)
     Q_PROPERTY(QString     workingDirectory READ workingDirectory WRITE setWorkingDirectory NOTIFY workingDirectoryChanged)
+    Q_PROPERTY(QStringList environment      READ environment      WRITE setEnvironment      NOTIFY environmentChanged)
     Q_PROPERTY(QString     successPattern   READ successPattern   WRITE setSuccessPattern   NOTIFY successPatternChanged)
     Q_PROPERTY(bool        running        READ running        NOTIFY runningChanged)
     Q_PROPERTY(bool        success        READ success        NOTIFY successChanged)
@@ -53,6 +54,7 @@ public:
     QString     command()          const { return m_command; }
     QStringList arguments()        const { return m_arguments; }
     QString     workingDirectory() const { return m_workingDirectory; }
+    QStringList environment()      const { return m_environment; }
     QString     successPattern()   const { return m_successPattern; }
     bool        running()        const { return m_running; }
     bool        success()        const { return m_success; }
@@ -61,6 +63,7 @@ public:
     void setCommand(const QString &cmd);
     void setArguments(const QStringList &args);
     void setWorkingDirectory(const QString &dir);
+    void setEnvironment(const QStringList &env);
     void setSuccessPattern(const QString &pattern);
 
     Q_INVOKABLE void run();
@@ -74,6 +77,7 @@ signals:
     void commandChanged();
     void argumentsChanged();
     void workingDirectoryChanged();
+    void environmentChanged();
     void successPatternChanged();
     void runningChanged();
     void successChanged();
@@ -91,6 +95,7 @@ private:
     QString     m_command;
     QStringList m_arguments;
     QString     m_workingDirectory;
+    QStringList m_environment;
     QString     m_successPattern;
     bool        m_running = false;
     bool        m_success = false;

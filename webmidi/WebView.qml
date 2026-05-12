@@ -15,17 +15,10 @@ Item {
     function goBack() { _view.goBack() }
     function clear() { _view.stop(); _view.url = "about:blank" }
 
-    // Forward all key events to the web view so arrow keys, Enter, Escape etc.
-    // work inside popup menus and other interactive page elements.
-    Keys.forwardTo: [_view]
-
-    // Grab focus whenever the item becomes visible or is clicked.
+    // Ensure the web view receives native key events directly.
+    // Do NOT use Keys.forwardTo — it sends synthetic QML events that bypass
+    // Chromium's internal input handling (breaks arrow-key popup navigation).
     onVisibleChanged: { if (visible) _view.forceActiveFocus() }
-    MouseArea {
-        anchors.fill: parent
-        propagateComposedEvents: true
-        onPressed: function(mouse) { _view.forceActiveFocus(); mouse.accepted = false }
-    }
     
     
       // ── WebChannel owns the transport ─────────────────────────────────────────
@@ -39,6 +32,7 @@ Item {
         id: _view
         anchors.fill: parent
         url: ""
+        focus: true
 
         webChannel: _channel
 
